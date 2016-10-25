@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Editor</title>
+        <style type="text/css" media="screen">
+            body {
+                overflow: hidden;
+            }
+
+            #editor {
+                margin: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <pre id="editor">/*
+          Blink
+          Turns on an LED on for one second, then off for one second, repeatedly.
+
+          Most Arduinos have an on-board LED you can control. On the Uno and
+          Leonardo, it is attached to digital pin 13. If you're unsure what
+          pin the on-board LED is connected to on your Arduino model, check
+          the documentation at http://www.arduino.cc
+
+          This example code is in the public domain.
+
+          modified 8 May 2014
+          by Scott Fitzgerald
+         */
+
+
+        // the setup function runs once when you press reset or power the board
+        void setup() {
+          // initialize digital pin 13 as an output.
+          pinMode(13, OUTPUT);
+        }
+
+        // the loop function runs over and over again forever
+        void loop() {
+          digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+          delay(1000);              // wait for a second
+          digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+          delay(1000);              // wait for a second
+        }
+    }</pre>
+
+        <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <!-- load ace -->
+
+        <!-- load ace language tools -->
+        <script src="src-noconflict/ext-language_tools.js"></script>
+        <script>
+
+            ace.require("ace/ext/language_tools");
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/eclipse");
+            editor.setFontSize(17)
+            editor.session.setMode("ace/mode/c_cpp");
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: false
+
+            });
+
+            
+
+            function  getvalueEditor() {
+                return editor.getValue();
+            }
+
+//            console.log(editor.getValue());
+//            console.log("makan");
+        </script>
+
+    </body>
+</html>

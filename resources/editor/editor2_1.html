@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Editor</title>
+        <style type="text/css" media="screen">
+            body {
+                overflow: hidden;
+            }
+
+            #editor {
+                margin: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <pre id="editor">
+
+        #include "EasyLib.h"
+
+        #define ID_SERVICE_LAMPU   99
+        #define ID_CONTROL_LAMPU   99
+        #define NILAI_LAMPU_NYALA  99
+        #define NILAI_LAMPU_MATI   98
+
+
+        EasyLib easyHub;
+
+        int controlHandlerLampu(BinaryControl *bi) {
+                if (bi->isActionTrue()) {
+                        digitalWrite(13, HIGH);
+                        return 100;
+                } else if (bi->isActionFalse()) {
+                        digitalWrite(13, LOW);
+                        return 101;
+                } else {
+                        return 102;
+
+                }
+
+        }
+        void setup() {
+
+                pinMode(13, OUTPUT);
+                pinMode(2, OUTPUT);
+                Serial.begin(57600);
+                BinaryControl *lampu = new BinaryControl(ID_SERVICE_LAMPU, ID_CONTROL_LAMPU, NILAI_LAMPU_NYALA, NILAI_LAMPU_MATI,
+                                NILAI_LAMPU_NYALA);
+                lampu->registryControlHandler(&controlHandlerLampu);
+                easyHub.registerBinaryControl(lampu);
+        }
+
+        void loop() {
+
+                easyHub.run();
+
+        }
+
+
+
+        </pre>
+
+        <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <!-- load ace -->
+
+        <!-- load ace language tools -->
+        <script src="src-noconflict/ext-language_tools.js"></script>
+        <script>
+
+            ace.require("ace/ext/language_tools");
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/eclipse");
+            editor.setFontSize(17)
+            editor.session.setMode("ace/mode/c_cpp");
+            editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: false
+
+            });
+
+            
+
+            function  getvalueEditor() {
+                return editor.getValue();
+            }
+
+//            console.log(editor.getValue());
+//            console.log("makan");
+        </script>
+
+    </body>
+</html>

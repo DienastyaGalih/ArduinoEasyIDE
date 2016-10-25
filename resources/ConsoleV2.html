@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="description" content="Metro, a sleek, intuitive, and powerful framework for faster and easier web development for Windows Metro Style.">
+        <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, metro, front-end, frontend, web development">
+        <meta name="author" content="Sergey Pimenov and Metro UI CSS contributors">
+
+        <!--<link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />-->
+        <title>Easy</title>
+
+        <script src="http://malsup.github.com/jquery.form.js"></script> 
+        <link href="docs/css/metro.css" rel="stylesheet">
+        <link href="docs/css/metro-icons.css" rel="stylesheet">
+        <link href="docs/css/metro-responsive.css" rel="stylesheet">
+        <link href="docs/css/metro-schemes.css" rel="stylesheet">
+
+        <link href="docs/css/docs.css" rel="stylesheet">
+
+        <script src="docs/js/jquery-2.1.3.min.js"></script>
+        <script src="docs/js/metro.js"></script>
+        <script src="docs/js/docs.js"></script>
+        <script src="docs/js/prettify/run_prettify.js"></script>
+        <script src="docs/js/ga.js"></script>
+        <style>
+            hr {
+                display: block;
+                margin-top: 0em;
+                margin-bottom: 0em;
+                margin-left: 0em;
+                margin-right: 0em;
+                border-style: inset;
+                border-width: 1px;
+            }
+        </style>
+        <script>
+            function showCharm(id) {
+
+
+                var charm = $("#" + id + "-charm").data("charm");
+                if (charm.element.data("opened") === true) {
+                    charm.close();
+                } else {
+                    terminalOpen();
+                    charm.open();
+                }
+            }
+
+            function setControlConnectionRed() {
+                $("#controlConectionIcon").removeClass("fg-green");
+                $("#controlConectionText").removeClass("fg-green");
+                $("#controlConectionText").addClass("fg-red");
+                $("#controlConectionIcon").addClass("fg-red");
+            }
+            function setControlConnectionYellow() {
+                $("#controlConectionIcon").removeClass("fg-green");
+                $("#controlConectionText").removeClass("fg-green");
+                $("#controlConectionText").addClass("fg-red");
+                $("#controlConectionIcon").addClass("fg-red");
+            }
+
+            function setControlConnectionGreen() {
+                $("#controlConectionIcon").removeClass("fg-red");
+                $("#controlConectionText").removeClass("fg-red");
+                $("#controlConectionText").addClass("fg-green");
+                $("#controlConectionIcon").addClass("fg-green");
+            }
+
+        </script>
+
+
+        <script>
+            function showDialog(id) {
+
+                var dialog = $("#" + id).data('dialog');
+                if (!dialog.element.data('opened')) {
+                    dialog.open();
+                } else {
+                    dialog.close();
+                }
+            }
+        </script>
+    </head>
+
+
+<body>
+
+
+    <ul class="h-menu  fixed-top shadow smaller" >
+        <li><a class="fg-white border  bg-darkRed"  style="width: 100%">Developer</a></li>
+        <li><a href="#">Home</a></li>
+        <li>
+            <a href="#" class="dropdown-toggle">Library</a>
+            <ul  class="d-menu" data-role="dropdown">
+                <li><a href="#">DHT11</a></li>
+                <li><a href="#">Servo</a></li>
+                <li>
+                    <a href="#" class="dropdown-toggle">Communication</a>
+                    <ul  class="d-menu" data-role="dropdown">
+                        <li><a href="#">MQTT</a></li>
+                        <li><a href="#">CoAP</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="dropdown-toggle">Example</a>
+            <ul  class="d-menu" data-role="dropdown">
+                <li><a href="#">Blink</a></li>
+                <li><a href="#">Serial Event</a></li>
+                <li>
+                    <a href="#" class="dropdown-toggle">Analog</a>
+                    <ul  class="d-menu" data-role="dropdown">
+                        <li><a href="#">MQTT</a></li>
+                        <li><a href="#">CoAP</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="#" id="verify">Verify</a></li>
+        <li><a  href="#" id="upload" onclick="programming()">Upload</a></li>
+        <li><a onclick="showCharm('right')" href="#" >Console</a></li>
+    </ul>
+
+
+
+    <!--<div class="">-->
+    <!--    <ul class="h-menu fixed-top  " >
+            <li><a class="fg-white border  bg-darkRed"  style="width: 100%">Developer</a></li>
+            <li><a href="#">Home</a></li>
+            <li>
+                <a href="#" class="dropdown-toggle">Library</a>
+    
+                <ul class="d-menu  " data-role="dropdown" data-no-close="true">
+                    <li><a class="fg-white" href="#">Servo</a></li>
+                    <li><a class="fg-white" href="#">LCD character</a></li>
+                    <li><a class="fg-white" href="#">DHT11</a></li>
+                    <li><a class="fg-white" href="#">Camera</a></li>
+                </ul>
+    
+            </li>
+            <li>
+                <a href="#" class="dropdown-toggle">Example</a>
+                <div class="m-menu-container" data-role="dropdown" data-no-close="true">
+                    <ul class="inline-list">
+                        <li><a href="#">Windows</a></li>
+                        <li><a href="#">Office</a></li>
+                        <li><a href="#">Skype</a></li>
+                        <li><a href="#">Internet Explorer</a></li>
+                        <li><a href="#">Visio</a></li>
+                    </ul>
+                </div>
+            </li>
+    
+    
+                <form action="../utill/compilerV1_20jun.php" id="searchForm">
+                        <input type="text" name="s" placeholder="Search...">
+                    <input type="submit" value="Search">
+                </form>
+            <li><a href="#" id="verify">Verify</a></li>
+            <li><a  href="#">Upload</a></li>
+            <li><a onclick="showCharm('right')" href="#" >Console</a></li>
+        </ul>-->
+    <!--</div>-->
+    <table  width="100%"  style="margin-top: 63px" >
+        <tr >
+            <td width="10%" valign="top"  >
+                <div class="cell" >
+                    <ul class="v-menu subdown block-shadow-impact min-size-required" >
+                        <li><a href="#"><img src="docs/images/home.png">Console</a></li>
+
+                        <li ><a href="#"><img src="docs/images/user.png">Files</a></li>
+                        <li class="active"><a  href="#"><span class="mif-pencil icon"></span>Code</a></li>
+
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" class="dropdown-toggle"><span class="mif-cogs icon"></span>Setting</a>
+                            <ul class="d-menu" data-role="dropdown">
+                                <li><a href="#">Password</a></li>
+                                <li><a href="#">Akun</a></li>
+                                <li>
+                                    <div class="item-block text-center">
+                                        <button class="square-button big-button"><img class="icon" src="docs/images/round.png"></button>
+                                        <button class="square-button big-button"><img class="icon" src="docs/images/location.png"></button>
+                                        <button class="square-button big-button"><img class="icon" src="docs/images/group.png"></button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-toggle">Test</a>
+                                    <ul class="d-menu" data-role="dropdown">
+                                        <li><a href="#">Hahah</a></li>
+                                        <li><a href="#">:)</a></li>
+                                        <li>
+                                            <div class="item-block text-center bg-grayLighter">
+                                                <button class="square-button"><img class="icon" src="docs/images/round.png"></button>
+                                                <button class="square-button"><img class="icon" src="docs/images/location.png"></button>
+                                                <button class="square-button"><img class="icon" src="docs/images/group.png"></button>
+                                                <button class="square-button"><img class="icon" src="docs/images/power.png"></button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><img src="docs/images/group.png">Share</a></li>
+                        <!--                        <li>
+                                                    <a href="#">
+                                                    
+                                                        <span class="mif-settings-ethernet icon">
+                        
+                                                        </span>Connection
+                        
+                                                    
+                                                    </a>
+                                                </li>-->
+                        <li class="divider"></li>
+
+                        <li class="">
+                            <a href="#" class="dropdown-toggle " class="bg-grayLighter"><span class="mif-settings-ethernet icon"></span>Connection</a>
+                            <ul class="d-menu" data-role="dropdown">
+                                <li class="bg-grayLighter"><a href="#"  class="fg-green" id="controlConectionText"><span class="mif-settings-ethernet fg-green icon " id="controlConectionIcon"></span>Control</a></li>
+                                <li class="bg-grayLighter"><a href="#"  class="fg-yellow"><span class="mif-settings-ethernet fg-yellow icon " ></span>Event</a></li>
+                                <li class="bg-grayLighter"><a href="#"  class="fg-red"><span class="mif-settings-ethernet fg-red icon " ></span>Arduino Controller</a></li>
+                                <li class="bg-grayLighter"><a href="#"  class="fg-yellow"><span class="mif-settings-ethernet fg-yellow icon " ></span>Serial Terminal</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </td>
+
+            <td width="90%"  valign="top" align="left">
+                <div class="tabcontrol2"  data-role="tabcontrol" style="margin-top: 6px;margin-left: 0px;" data-open-target="#frame_5_1">
+                    <ul class="tabs">
+                        <li><a href="#frame_5_1">Code</a></li>
+                        <li><a href="#frame_5_2">Visual</a></li>
+                        <!--<li class="disabled"><a href="">Tab 5</a></li>-->
+                    </ul>
+                    <div class="frames " >
+                        <div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">
+                            <iframe id="frameCode" name="frameCode" frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>
+                        </div>
+                        <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px">
+                            <iframe id="frameCode" name="frameCode" frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+<!--        <tr >
+            <td colspan="2">
+                <hr> 
+                <div >errooor on table</div>
+            </td>
+        </tr>-->
+    </table>
+
+
+    <!--<button class="button" onclick="showCharm('right')">Right side</button>-->
+
+
+    <div class="bg-gray" data-role="charm" data-position="right" id="right-charm" style="width: 353px">
+        <table width="100%" >
+            <tr>
+                <td>
+
+                    <table width="100%" align="right">
+                        <tr>
+
+                            <td align="left">
+                                <button class="button small-button " onclick="clearTerminal()">Clear</button> <button class="button small-button " style="margin-left: 5px">freze</button>                    
+                            </td>
+                            <td align="right">
+                                <h3 class="text-light">Console Terminal</h3>            
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <!--            <tr>
+                            <td>
+                                <button class="button small-button">Clear</button> <button class="button small-button " style="margin-left: 5px">freze</button>        
+                            </td>
+                        </tr>-->
+            <tr>
+                <td>
+                    <div class="input-control  textarea"  data-text-max-height="300" style="width: 100%">
+                        <textarea id="terminal" rows="12"></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <table width="100%" >
+                        <tr>
+                            <!--                            <td>
+                                                            <form id="sendForm">
+                                                                <div class="input-control text"  >
+                                                                    <input type="text" id="textField" value="" style="width:200px;"> 
+                                                                </div>
+                                                                <input class="button" type="submit" value="Send">
+                                                            </form>
+                                                        </td>-->
+                            <td>
+                                <div class="input-control text"  >
+                                    <input type="text" id="terminalSendField"  style="width: 250px"> 
+                                </div>
+                            </td>
+                            <td align="right">
+                                <button class="button" onclick="terminalSend()" id="terminalSendButton">Send</button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr style="border-color: #ffffff;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" align="right">
+                        <tr>
+                            <td align="left">
+                                <button class="button small-button" id="debugClear">Clear</button>
+                            </td>
+                            <td align="right">
+                                <h3 class="text-light">Debug Connection</h3>
+                            </td>
+
+                        </tr>
+                    </table>
+
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="input-control  textarea " data-text-max-height="400" style="width: 100%;height: 100px">
+                        <textarea style="font-size: smaller" name="debug" id="debug" ></textarea>
+                    </div>    
+                </td>
+            </tr>
+
+        </table>
+        <!--                <h3 class="text-light">Console Terminal</h3>
+                        <button class="button small-button">Clear</button> <button class="button small-button " style="margin-left: 5px">freze</button>
+                        <div class="input-control  textarea"  data-text-max-height="300" style="width: 98%">
+                            <textarea rows="13"></textarea>
+                        </div>
+                        
+                
+                        <h3 class="text-light">Debug Connection</h3>
+                        <button class="button small-button" id="debugClear">Clear</button>
+                        <div class="input-control  textarea " data-text-max-height="400" style="width: 98%">
+                            <textarea style="font-size: smaller" name="debug" id="debug"></textarea>
+                        </div>-->
+    </div>
+
+
+    <form style="visibility: hidden" action="../utill/compilerV1_20jun.php" id="searchForm">
+        <input type="submit" value="Search">
+    </form>
+
+
+
+
+    <div data-role="dialog" id="dialog9" class="padding20" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false">
+        <h1>Waiting to verify code</h1>
+        <div  data-role="preloader" data-type="metro" data-style="color"></div>
+    </div>
+
+
+</body>
+
+<script>
+
+    function clearTerminal() {
+        $("textarea#terminal").val("");
+    }
+
+    $("#verify").click(function () {
+        $("#searchForm").submit();
+        showDialog('dialog9');
+    });
+
+    $("#debugClear").click(function () {
+        $("textarea#debug").val("");
+    });
+
+    // Attach a submit handler to the form
+    $("#searchForm").submit(function (event) {
+
+        // Stop form from submitting normally
+        event.preventDefault();
+
+        // Get some values from elements on the page:
+        var $form = $(this),
+                term = $form.find("input[name='s']").val(),
+                url = $form.attr("action");
+
+
+
+        var $f = $("#frameCode");
+        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works
+
+        // Send the data using post
+        var posting = $.post(url, {userName: "galih", projectName: "budi", projectValue: valueEditor});
+
+
+        // Put the results in a div
+        posting.done(function (data) {
+            $("textarea#debug").val(data);
+            showDialog('dialog9');
+            $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
+        });
+//        posting.err
+
+    });
+</script>
+
+
+<script>
+    if (!window.WebSocket) {
+        alert("FATAL: WebSocket not natively supported. This demo will not work!");
+    }
+
+
+    function addDebugLog(data) {
+
+        var len = $("textarea#debug").val().length;
+        $("textarea#debug").val($("textarea#debug").val() + data);
+
+        $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
+    }
+
+    function logProgramming(text) {
+//        $("log").innerHTML = (new Date).getTime() + ": " + (!Object.isUndefined(text) && text !== null ? text.escapeHTML() : "null") + $("log").innerHTML;
+        alert(text);
+    }
+
+    var ws;
+    function programming() {
+
+        if (ws == null) {
+            ws = new WebSocket("ws://101.50.3.47:9082");
+        } else {
+            ws.send('c');
+        }
+//        logProgramming("buka");
+        ws.onopen = function () {
+            ws.send('esp01');
+//            logProgramming("[WebSocket#onopen]\n");
+            ws.send('c');
+        }
+        ws.onmessage = function (e) {
+            addDebugLog(e.data + "\n");
+
+        }
+        ws.onclose = function () {
+            ws.close();
+            logProgramming("[WebSocket#onclose]\n");
+            ws = null;
+        }
+
+
+    }
+    var wsControlDebug;
+    controlDebug();
+    function controlDebug() {
+        if (wsControlDebug == null) {
+            wsControlDebug = new WebSocket("ws://101.50.3.47:9090");
+        } else {
+
+        }
+
+        wsControlDebug.onopen = function () {
+            alert("control debug running");
+            wsControlDebug.send('esp01');
+        }
+        wsControlDebug.onmessage = function (e) {
+            var dataSplit = e.data.split("&$");
+            if (dataSplit[0] == "g") {
+                if (dataSplit[1] == "disconnected") {
+                    setControlConnectionRed();
+                } else if (dataSplit[1] == "connected") {
+                    setControlConnectionGreen();
+                }
+            }
+            addDebugLog("[control] " + e.data + "\n");
+
+        }
+        wsControlDebug.onclose = function () {
+            logProgramming("[WebSocket#onclose]\n");
+            wsControlDebug = null;
+        }
+    }
+</script>
+
+<script>
+
+
+    function addTerminalLog(data) {
+        var len = $("textarea#terminal").val().length;
+        if (len > 1000) {
+//            $("textarea#terminal").val($("textarea#terminal").val().substring(len - 100, len) + data);
+            $("textarea#terminal").val("");
+        } else {
+            $("textarea#terminal").val($("textarea#terminal").val() + data);
+        }
+
+        $('textarea#terminal').scrollTop($('textarea#terminal')[0].scrollHeight);
+    }
+
+
+
+
+    var wsTerminal = null;
+    function terminalOpen() {
+        alert("Opening Terminal");
+        if (wsTerminal == null) {
+            wsTerminal = new WebSocket("ws://101.50.3.47:9083");
+        } else {
+
+        }
+        wsTerminal.onopen = function () {
+            wsTerminal.send('esp01');
+            alert("connection established");
+        }
+        wsTerminal.onmessage = function (e) {
+            addTerminalLog(e.data + "\n");
+
+        }
+        wsTerminal.onclose = function () {
+            addTerminalLog("[WebSocket#onclose]\n");
+            wsTerminal = null;
+        }
+    }
+
+    function terminalSend() {
+        wsTerminal.send($("input#terminalSendField").val());
+        addDebugLog("[sent]" + $("input#terminalSendField").val())
+    }
+
+</script>
+
+
+
+</html>
