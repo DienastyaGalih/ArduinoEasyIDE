@@ -24,22 +24,52 @@
         <script src="js/docs.js"></script>
         <script src="js/prettify/run_prettify.js"></script>
         <script src="js/ga.js"></script>
-        <script src="Loader.js"></script>
 
 
-
+        
     </head>
     <body class="bg-grayLighter" >
+        
+        <script>
+//            var projectName;
+//            var arduinoType;
+//            var arduinoIC;
+//
+//            var folder = {
+//                name: "",
+//                dateModified: "",
+//                dateCreated: "",
+//                files: [],
+//            }
+//
+//            var file = {
+//                name: "",
+//                dateModified: "",
+//                dateCreated: "",
+//                source: "",
+//            }
+//
+//            var folderArray=[];
+//            
+//            folderArray[0]=new folder.name="nama";
+//
+//
 
-        <div data-role="charm" id="menu-special" data-position="left" style="padding: 0;margin: 0;" class="bg-grayLighter shadow">
-            <div style="height: 100%; width: 150px;" class="bg-dark">
+            alert("makan malam");
+            alert("makan malam");
 
-            </div>
-            <div style="height: 100%; width: 500px;" class="bg-gray">
+            var jqxhr = $.get("localhost:8080/project/get/budi", function () {
+                alert("success");
+            }).done(function () {
+                alert("second success");
+            }).fail(function () {
+                alert("error");
+            }).always(function () {
+                alert("finished");
+            });
 
-            </div>
-        </div>
-
+        </script>
+        
 
         <div class="fluent-menu" data-role="fluentmenu" data-on-special-click="specialClick">
 
@@ -49,14 +79,14 @@
                 <li class="active"><a href="#tab_mailings">Code</a></li>
                 <li><a href="#tab_folder">Folder</a></li>
                 <li><a href="#tab_view">View</a></li>
-                <li class="bg-grayLighter" style="margin-top: 5px;margin-left: 10px;color: #8b7e96" id="projectName">Project Blinking project</li>
-
             </ul>
+
 
             <div class="tabs-content">
                 <div class="tab-panel" id="tab_home">
                     <div class="tab-panel-group">
                         <div class="tab-group-content">
+
                             <button class="fluent-big-button " style="width: 70px">
                                 <span class="icon mif-checkmark" ></span>
                                 <span class="label">Verify</span>
@@ -65,14 +95,17 @@
                                 <span class="icon mif-arrow-right"></span>
                                 <span class="label">Upload</span>
                             </button>
+
                         </div>
                         <div class="tab-group-caption " style="padding: 2px" >Run</div>
                     </div>
                     <div class="tab-panel-group">
+
                         <div class="tab-content-segment">
+
                             <button class="fluent-big-button dropdown-toggle" >
                                 <span  class="on-left"><img  src="images/arduinoIcon.png"></span>
-                                <span class="label" id="arduinoType">Arduino Board</span>
+                                <span class="label">Arduino Board</span>
                             </button>
                             <ul class="d-menu" data-role="dropdown">
                                 <li><a href="#">Arduino nano</a></li>
@@ -85,7 +118,7 @@
                         <div class="tab-content-segment">
                             <button class="fluent-big-button dropdown-toggle" >
                                 <span class=" on-left"><img src="images/icIcon2.png"></span>
-                                <span class="label" id="arduinoIC">Arduino Board</span>
+                                <span class="label">Arduino Board</span>
                             </button>
                             <ul class="d-menu" data-role="dropdown">
                                 <li><a href="#">ATmega 32PU</a></li>
@@ -164,8 +197,8 @@
             <div class="row cells12 bg-grayLighter" >
                 <div class="cell  colspan2" style="padding-left: 20px">
                     <div class="treeview" data-role="treeview" >
-                        <ul id="projectBar">
-                            <li class="node" >
+                        <ul >
+                            <li class="node">
                                 <span class="leaf"><span class="mif-folder"></span> Network</span>
                                 <span class="node-toggle"></span>
                                 <ul>
@@ -176,7 +209,6 @@
                                     <li><span class="leaf"><span class="icon mif-file-code"></span> GALAXY S4</span></li>
                                 </ul>
                             </li>
-                            <li class="node" ><span class="leaf"><span class="mif-folder"></span> Network</span><span class="node-toggle"></span><ul></ul></li>
                         </ul>
                     </div>
                 </div>
@@ -186,21 +218,25 @@
                             <li><a href="#frame_5_1">Code</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
                             <li><a href="#frame_5_2">Visual asdsad</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
                         </ul>
+                        <!--<hr style="border-width: 2px; margin: 0px; background: #ffffff">-->
+                        <table  width="100%" style="border-color: white;border: 2px solid white">
+                            <tr>
+                                <td>
+                                    <div class="frames bordered" >
+                                        <div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">
+                                            <iframe  frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>
+                                        </div>
+                                        <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px">
+                                            <iframe hidden frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
+                                        </div>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                        </table>
 
-                        <div class="frames bordered" >
-                            <div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">
-                                <iframe  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>
-                            </div>
-                            <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px">
-                                <iframe  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
-                            </div>
-
-                        </div>                                    
                     </div>
                 </div>
             </div>
-
-
             <div class="row cells12">
                 <div class="cell debug">1</div>
                 <div class="cell debug colspan10">2</div>

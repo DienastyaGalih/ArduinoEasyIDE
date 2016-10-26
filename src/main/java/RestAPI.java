@@ -28,7 +28,6 @@ public class RestAPI extends AbstractVerticle {
     public void start() {
 
         setUpInitialData();
-
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
         router.get("/products/:productID").handler(this::handleGetProduct);

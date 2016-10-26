@@ -1,0 +1,37 @@
+{
+    "project":
+            {
+                "name": "blinking",
+                "create_date": "11-feb-2014",
+                "modify_date": "11-feb-2014",
+                "detail": "some detail",
+                "visibility": "public",
+                "visibility": "public",
+                "arduino_type": "arduino uno",
+                "arduino_IC": "atmega 328"
+            },
+    "folders": [
+        {
+            "name": "name folder",
+            "create_date": "11-feb-2014",
+            "modify_date": "11-feb-2014",
+            "files": [
+                {
+                    "name": "name file",
+                    "source": "text of source",
+                    "create_date": "11-feb-2014",
+                    "modify_date": "11-feb-2014"
+                },
+                {
+                    "name": "name file",
+                    "source": "text of source",
+                    "create_date": "11-feb-2014",
+                    "modify_date": "11-feb-2014"
+                }
+
+            ]
+        }
+    ]
+
+}
+
