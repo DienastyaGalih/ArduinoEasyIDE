@@ -54,6 +54,24 @@ public class Console extends AbstractVerticle {
             }
         });
 
+        router.get("/project/get/file/:fileId").handler(routingContext -> {
+            String fileId = routingContext.request().getParam("fileId");
+            System.out.println("project name " + fileId);
+            HttpServerResponse response = routingContext.response();
+            if (fileId == null) {
+                sendError(400, response);
+            } else {
+                String fileSource = DbHelper.getInstance().getFileSource("", fileId);
+                System.out.println(fileSource.toString());
+                if (fileSource == null) {
+                    sendError(404, response);
+                } else {
+                       response.end(fileSource);
+//                    response.putHeader("content-type", "application/json").end(fileSource);
+                }
+            }
+        });
+
         server.requestHandler(router::accept).listen(8080);
 
         vertx.deployVerticle(new RestAPI());

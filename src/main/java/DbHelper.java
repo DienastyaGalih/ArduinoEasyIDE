@@ -128,4 +128,8 @@ public class DbHelper {
         return new JsonObject(returnDummy);
     }
 
+    public String getFileSource(String username, String fileId) {
+        return "cuma isi codingan aja... heheheheh";
+    }
+
 }

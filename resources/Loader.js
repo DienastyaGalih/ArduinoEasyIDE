@@ -32,6 +32,29 @@ $(document).ready(function () {
     }).always(function () {
         alert("finished");
     });
+
+
+    $("#virifyButton").click(function (event) {
+
+
+//        var $f = $("#frame_lcdhdata");
+//        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//        alert('bahaya');
+//        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+//        alert(valueEditor);
+
+
+
+//        var $f = $("#frameCode");
+////        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//        $f.get(0).contentWindow.setValueEditor("makan"); //works    
+
+//        var $f = $("#frameCode");
+//        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+//        alert(valueEditor);
+    });
+
 });
 $(window).load(function () {
 
@@ -79,43 +102,87 @@ function addProject(project) {
 
 function addTabFile(nameFile) {
 
-    $("#tabCode").append('<li id="make"><a href="#frame_5_2">' + nameFile + '</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
-    var sourcePane = '<div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">' +
-//            '<iframe  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>' +
+    var frameIdSource = 'frame_' + nameFile.replace(".", "").replace("/", "");
+//
+//    $("#tabCode").append('<li id="make"><a href="#frame_' + nameFile.replace(".", "").replace("/", "") + '">' + nameFile + '</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+//    var sourcePane = '<div class="frame" id="frame_' + nameFile.replace(".", "").replace("/", "") + '" style="margin-top: 0px;padding: 0px">' +
+//            '<iframe  frameborder="1" width="100%" height="555" src="editor/editor_1.html"></iframe>' +
+//            '</div>';
+
+
+
+    $("#tabCode").append('<li id="make"><a href="#' + frameIdSource + '">' + nameFile + '</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+    var sourcePane = '<div class="frame" id="' + frameIdSource + '" style="margin-top: 0px;padding: 0px">' +
+            '<iframe id="mmm"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor_1.html"></iframe>' +
             '</div>';
 
-    $("#tabCode").append(sourcePane);
-
-
-    $("#make").trigger("click");
-    $("#make").trigger("dblclick");
-    $(document).ready(function () {
-        $("#make").trigger("click");
-        $("#make").click(function (event) {
-
-            alert("makan");
-//            addTabFile(event.target.id)
-        });
-    });
+    $("#tabSource").append(sourcePane);
 
 
 
+    setTimeout(requestTohh, 500);
+
+//        alert($("#"+frameIdSource))
 
 
-
-
-//    var jqxhr = $.get("http://localhost:8080/project/get/budi", function (data) {
-//        addProject(data.project_structure);
+//    var makeUI = $.get("http://localhost:8080/project/get/file/" + nameFile, function (data) {
+////        alert(frameIdSource + "data");
+//        var $f = $('#mmm');
+//        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+//        alert(valueEditor);
+////        var tt="#frameCode"
+////        var $f = $('#frame_' + nameFile.replace(".", "").replace("/", "") );
+//
+////        addProject(data.project_structure);
 //    }).done(function () {
-//        alert("second success ");
-//    }).fail(function () {
-//        alert("error");
+////        alert("second success ");
+//    }).fail(function (data) {
+////        console.log(data);
+////        alert("error "+data);
+//
 //    }).always(function () {
-//        alert("finished");
+////        alert("finished");
 //    });
 
 
+//    requestTohh();
 
+}
+
+function requestTohh(nameFile) {
+//    alert("ha");
+//
+//
+//    var $f = $('#mmm');
+//    alert("ha2");
+//    var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//    valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+//    alert(valueEditor);
+
+
+
+    var makeUI = $.get("http://localhost:8080/project/get/file/"+nameFile, function (data) {
+//        alert(frameIdSource + "data");
+        alert("haasd");
+        var $f = $('#mmm');
+        alert("ha2");
+        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+        alert(valueEditor);
+//        var tt="#frameCode"
+//        var $f = $('#frame_' + nameFile.replace(".", "").replace("/", "") );
+
+//        addProject(data.project_structure);
+    }).done(function () {
+//        alert("second success ");
+    }).fail(function (data) {
+//        console.log(data);
+//        alert("error " + data);
+
+    }).always(function () {
+//        alert("finished");
+    });
 }
 
 
@@ -146,3 +213,11 @@ function specialClick() {
         charm.open();
     }
 }
+
+function getFileSourceFromEditor() {
+
+
+
+
+}
+
