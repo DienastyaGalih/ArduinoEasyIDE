@@ -12,22 +12,35 @@
             },
     "folders": [
         {
-            "name": "name folder",
+            "name": "lib",
             "create_date": "11-feb-2014",
             "modify_date": "11-feb-2014",
             "files": [
                 {
-                    "name": "name file",
+                    "name": "lcd.c",
                     "source": "text of source",
                     "create_date": "11-feb-2014",
                     "modify_date": "11-feb-2014"
                 },
                 {
-                    "name": "name file",
+                    "name": "lcd.h",
+                    "source": "text of source",
+                    "create_date": "11-feb-2014",
+                    "modify_date": "11-feb-2014"
+                },
+                {
+                    "name": "dht.c",
+                    "source": "text of source",
+                    "create_date": "11-feb-2014",
+                    "modify_date": "11-feb-2014"
+                },
+                {
+                    "name": "dht.h",
                     "source": "text of source",
                     "create_date": "11-feb-2014",
                     "modify_date": "11-feb-2014"
                 }
+
 
             ]
         }

@@ -1,0 +1,77 @@
+{
+    "project":
+            {
+                "name": "blinking",
+                "create_date": "11-feb-2014",
+                "modify_date": "11-feb-2014",
+                "detail": "some detail",
+                "visibility": "public",
+                "visibility": "public",
+                "arduino_type": "arduino uno",
+                "arduino_IC": "atmega 328"
+            },
+    "project_structure":
+            {
+                "folders": [
+                    {
+                        "name": "lib",
+                        "create_date": "11-feb-2014",
+                        "modify_date": "11-feb-2014",
+                        "files": [
+                            {
+                                "name": "lcd.c",
+                                "source": "text of source",
+                                "create_date": "11-feb-2014",
+                                "modify_date": "11-feb-2014"
+                            },
+                            {
+                                "name": "lcd.h",
+                                "source": "text of source",
+                                "create_date": "11-feb-2014",
+                                "modify_date": "11-feb-2014"
+                            },
+                            {
+                                "name": "dht.c",
+                                "source": "text of source",
+                                "create_date": "11-feb-2014",
+                                "modify_date": "11-feb-2014"
+                            },
+                            {
+                                "name": "dht.h",
+                                "source": "text of source",
+                                "create_date": "11-feb-2014",
+                                "modify_date": "11-feb-2014"
+                            }
+                        ]
+
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "lcd.c",
+                        "source": "text of source",
+                        "create_date": "11-feb-2014",
+                        "modify_date": "11-feb-2014"
+                    },
+                    {
+                        "name": "lcd.h",
+                        "source": "text of source",
+                        "create_date": "11-feb-2014",
+                        "modify_date": "11-feb-2014"
+                    },
+                    {
+                        "name": "dht.c",
+                        "source": "text of source",
+                        "create_date": "11-feb-2014",
+                        "modify_date": "11-feb-2014"
+                    },
+                    {
+                        "name": "dht.h",
+                        "source": "text of source",
+                        "create_date": "11-feb-2014",
+                        "modify_date": "11-feb-2014"
+                    }
+                ]
+            }
+}
+

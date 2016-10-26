@@ -47,44 +47,84 @@ public class DbHelper {
     }
 
     public JsonObject getProject(String userName, String projectName) {
-        String returnDummy = "{\n" +
-"    \"project\":\n" +
-"            {\n" +
-"                \"name\": \"blinking\",\n" +
-"                \"create_date\": \"11-feb-2014\",\n" +
-"                \"modify_date\": \"11-feb-2014\",\n" +
-"                \"detail\": \"some detail\",\n" +
-"                \"visibility\": \"public\",\n" +
-"                \"visibility\": \"public\",\n" +
-"                \"arduino_type\": \"arduino uno\",\n" +
-"                \"arduino_IC\": \"atmega 328\"\n" +
-"            },\n" +
-"    \"folders\": [\n" +
-"        {\n" +
-"            \"name\": \"name folder\",\n" +
-"            \"create_date\": \"11-feb-2014\",\n" +
-"            \"modify_date\": \"11-feb-2014\",\n" +
-"            \"files\": [\n" +
-"                {\n" +
-"                    \"name\": \"name file\",\n" +
-"                    \"source\": \"text of source\",\n" +
-"                    \"create_date\": \"11-feb-2014\",\n" +
-"                    \"modify_date\": \"11-feb-2014\"\n" +
-"                },\n" +
-"                {\n" +
-"                    \"name\": \"name file\",\n" +
-"                    \"source\": \"text of source\",\n" +
-"                    \"create_date\": \"11-feb-2014\",\n" +
-"                    \"modify_date\": \"11-feb-2014\"\n" +
-"                }\n" +
-"\n" +
-"            ]\n" +
-"        }\n" +
-"    ]\n" +
-"\n" +
-"}\n" +
-"\n" +
-"";
+        String returnDummy = "{\n"
+                + "    \"project\":\n"
+                + "            {\n"
+                + "                \"name\": \"blinking\",\n"
+                + "                \"create_date\": \"11-feb-2014\",\n"
+                + "                \"modify_date\": \"11-feb-2014\",\n"
+                + "                \"detail\": \"some detail\",\n"
+                + "                \"visibility\": \"public\",\n"
+                + "                \"visibility\": \"public\",\n"
+                + "                \"arduino_type\": \"arduino uno\",\n"
+                + "                \"arduino_IC\": \"atmega 328\"\n"
+                + "            },\n"
+                + "    \"project_structure\":\n"
+                + "            {\n"
+                + "                \"folders\": [\n"
+                + "                    {\n"
+                + "                        \"name\": \"lib\",\n"
+                + "                        \"create_date\": \"11-feb-2014\",\n"
+                + "                        \"modify_date\": \"11-feb-2014\",\n"
+                + "                        \"files\": [\n"
+                + "                            {\n"
+                + "                                \"name\": \"lcd.c\",\n"
+                + "                                \"source\": \"text of source\",\n"
+                + "                                \"create_date\": \"11-feb-2014\",\n"
+                + "                                \"modify_date\": \"11-feb-2014\"\n"
+                + "                            },\n"
+                + "                            {\n"
+                + "                                \"name\": \"lcd.h\",\n"
+                + "                                \"source\": \"text of source\",\n"
+                + "                                \"create_date\": \"11-feb-2014\",\n"
+                + "                                \"modify_date\": \"11-feb-2014\"\n"
+                + "                            },\n"
+                + "                            {\n"
+                + "                                \"name\": \"dht.c\",\n"
+                + "                                \"source\": \"text of source\",\n"
+                + "                                \"create_date\": \"11-feb-2014\",\n"
+                + "                                \"modify_date\": \"11-feb-2014\"\n"
+                + "                            },\n"
+                + "                            {\n"
+                + "                                \"name\": \"dht.h\",\n"
+                + "                                \"source\": \"text of source\",\n"
+                + "                                \"create_date\": \"11-feb-2014\",\n"
+                + "                                \"modify_date\": \"11-feb-2014\"\n"
+                + "                            }\n"
+                + "                        ]\n"
+                + "\n"
+                + "                    }\n"
+                + "                ],\n"
+                + "                \"files\": [\n"
+                + "                    {\n"
+                + "                        \"name\": \"lcd.c\",\n"
+                + "                        \"source\": \"text of source\",\n"
+                + "                        \"create_date\": \"11-feb-2014\",\n"
+                + "                        \"modify_date\": \"11-feb-2014\"\n"
+                + "                    },\n"
+                + "                    {\n"
+                + "                        \"name\": \"lcd.h\",\n"
+                + "                        \"source\": \"text of source\",\n"
+                + "                        \"create_date\": \"11-feb-2014\",\n"
+                + "                        \"modify_date\": \"11-feb-2014\"\n"
+                + "                    },\n"
+                + "                    {\n"
+                + "                        \"name\": \"dht.c\",\n"
+                + "                        \"source\": \"text of source\",\n"
+                + "                        \"create_date\": \"11-feb-2014\",\n"
+                + "                        \"modify_date\": \"11-feb-2014\"\n"
+                + "                    },\n"
+                + "                    {\n"
+                + "                        \"name\": \"dht.h\",\n"
+                + "                        \"source\": \"text of source\",\n"
+                + "                        \"create_date\": \"11-feb-2014\",\n"
+                + "                        \"modify_date\": \"11-feb-2014\"\n"
+                + "                    }\n"
+                + "                ]\n"
+                + "            }\n"
+                + "}\n"
+                + "\n"
+                + "";
         return new JsonObject(returnDummy);
     }
 

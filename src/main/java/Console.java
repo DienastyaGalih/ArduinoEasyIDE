@@ -30,7 +30,6 @@ public class Console extends AbstractVerticle {
                 .setDirectoryListing(true)
                 .setMaxAgeSeconds(1000)
         );
-
 //        router.route().handler(CorsHandler.create("vertx\\.io").allowedMethod(HttpMethod.GET));
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(HttpMethod.GET)

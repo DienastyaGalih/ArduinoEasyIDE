@@ -10061,11 +10061,12 @@ input[type="submit"].link:active {
 .tabcontrol2 .tabs li a {
   display: block;
   float: left;
-  padding: 8px 24px;
+  /*padding: 8px 24px;*/
+  padding: 5px 20px;
   color: #1d1d1d;
   font-size: .6875rem;
   font-weight: bold;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   position: relative;
   white-space: nowrap;
 }
@@ -10155,6 +10156,7 @@ input[type="submit"].link:active {
   border: 1px #eeeeee solid;
   border-top: 2px #ce352c solid;
   border-bottom: 0;
+  text-shadow: none ;
   color: #1ba1e2;
 }
 .tabcontrol2 .tabs li.active:hover a {
