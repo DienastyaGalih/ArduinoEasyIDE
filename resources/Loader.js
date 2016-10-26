@@ -45,9 +45,9 @@ $(document).ready(function () {
 
 
 
-//        var $f = $("#frameCode");
+        var $f = $("#frameCode");
 ////        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
-//        $f.get(0).contentWindow.setValueEditor("makan"); //works    
+        $f.get(0).contentWindow.setValueEditor("makan"); //works    
 
 //        var $f = $("#frameCode");
 //        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
@@ -100,9 +100,13 @@ function addProject(project) {
 
 }
 
+var tabFileName=[];
+var tabFileCondition=[];
+
 function addTabFile(nameFile) {
 
     var frameIdSource = 'frame_' + nameFile.replace(".", "").replace("/", "");
+    var codeSourceId = nameFile.replace(".", "AAA").replace("/", "AAA");
 //
 //    $("#tabCode").append('<li id="make"><a href="#frame_' + nameFile.replace(".", "").replace("/", "") + '">' + nameFile + '</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
 //    var sourcePane = '<div class="frame" id="frame_' + nameFile.replace(".", "").replace("/", "") + '" style="margin-top: 0px;padding: 0px">' +
@@ -111,16 +115,26 @@ function addTabFile(nameFile) {
 
 
 
-    $("#tabCode").append('<li id="make"><a href="#' + frameIdSource + '">' + nameFile + '</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+    $("#tabCode").append('<li class="tabPanel" id="' + nameFile + '" ><a id="' + nameFile + '" href="#' + frameIdSource + '">' + nameFile + '</a><span id="' + nameFile + '" style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
     var sourcePane = '<div class="frame" id="' + frameIdSource + '" style="margin-top: 0px;padding: 0px">' +
-            '<iframe id="mmm"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor_1.html"></iframe>' +
+            '<iframe id="' + codeSourceId + '"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>' +
             '</div>';
 
     $("#tabSource").append(sourcePane);
 
 
 
-    setTimeout(requestTohh, 500);
+
+    $(document).ready(function () {
+        $(".tabPanel").click(function (event) {
+//            alert("kena sini "+event.target.id);
+            requestTohh(codeSourceId);
+
+        });
+    });
+
+
+//    setTimeout(requestTohh(codeSourceId), 1000);
 
 //        alert($("#"+frameIdSource))
 
@@ -150,38 +164,43 @@ function addTabFile(nameFile) {
 
 }
 
-function requestTohh(nameFile) {
+function requestTohh(name) {
 //    alert("ha");
-//
-//
-//    var $f = $('#mmm');
-//    alert("ha2");
+
+
+//    var $f = $('#'+name);
+//    var $f = $('#frameCode');
 //    var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
 //    valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
 //    alert(valueEditor);
+//    valueEditor = $f.get(0).contentWindow.setValueEditor("makan malam"); //works    
+//    alert("ha2");
+//    
 
 
 
-    var makeUI = $.get("http://localhost:8080/project/get/file/"+nameFile, function (data) {
+
+    var makeUI = $.get("http://localhost:8080/project/get/file/"+name, function (data) {
 //        alert(frameIdSource + "data");
-        alert("haasd");
-        var $f = $('#mmm');
-        alert("ha2");
-        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
-        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
-        alert(valueEditor);
+//        alert("haasd");
+        var $f = $('#'+name);
+        valueEditor = $f.get(0).contentWindow.setValueEditor(data); //works    
+//        alert("ha2");
+//        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works
+//        valueEditor = $f.get(0).contentWindow.getvalueEditor(); //works    
+//        alert(valueEditor);
 //        var tt="#frameCode"
 //        var $f = $('#frame_' + nameFile.replace(".", "").replace("/", "") );
 
 //        addProject(data.project_structure);
     }).done(function () {
-//        alert("second success ");
+        alert("second success ");
     }).fail(function (data) {
 //        console.log(data);
-//        alert("error " + data);
+        alert("error " + data);
 
     }).always(function () {
-//        alert("finished");
+        alert("finished");
     });
 }
 
