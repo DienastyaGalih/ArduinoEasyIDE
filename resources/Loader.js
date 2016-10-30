@@ -6,8 +6,6 @@
 
 
 
-
-
 $(document).ready(function () {
     console.log("document loaded");
     var jqxhr = $.get("http://localhost:8080/project/get/budi", function (data) {
@@ -32,6 +30,33 @@ $(document).ready(function () {
     }).always(function () {
         alert("finished");
     });
+
+
+
+    $("#backButtonPanel").click(function () {
+        var charm = $("#menu-special").data("charm");
+
+        charm.close();
+    });
+
+    $("#newProjectButton").click(function () {
+
+        $(".sideBarLi").removeClass("active");
+        $("#newProjectButton").addClass("active");
+
+        $(".sidePanelMenuFile").hide( );
+        $("#newProjectPanel").show( );
+    });
+
+
+    $("#openProjectButton").click(function () {
+        $(".sideBarLi").removeClass("active");
+        $("#openProjectButton").addClass("active");
+
+        $(".sidePanelMenuFile").hide();
+        $("#openProjectPanel").show( );
+    });
+
 
 
     $("#virifyButton").click(function (event) {
@@ -100,8 +125,11 @@ function addProject(project) {
 
 }
 
-var tabFileName=[];
-var tabFileCondition=[];
+var tabFileArray = [];
+var tabFile = {
+    name: "",
+    status: ""
+}
 
 function addTabFile(nameFile) {
 
@@ -180,10 +208,10 @@ function requestTohh(name) {
 
 
 
-    var makeUI = $.get("http://localhost:8080/project/get/file/"+name, function (data) {
+    var makeUI = $.get("http://localhost:8080/project/get/file/" + name, function (data) {
 //        alert(frameIdSource + "data");
 //        alert("haasd");
-        var $f = $('#'+name);
+        var $f = $('#' + name);
         valueEditor = $f.get(0).contentWindow.setValueEditor(data); //works    
 //        alert("ha2");
 //        var valueEditor = $f[0].contentWindow.getvalueEditor();  //works

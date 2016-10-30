@@ -10,6 +10,7 @@
             }
 
             #editor {
+                z-index: no;
                 margin: 0;
                 position: absolute;
                 top: 0;
@@ -21,51 +22,7 @@
     </head>
     <body>
 
-        <pre id="editor">
-
-        #include "EasyLib.h"
-
-        #define ID_SERVICE_LAMPU   99
-        #define ID_CONTROL_LAMPU   99
-        #define NILAI_LAMPU_NYALA  99
-        #define NILAI_LAMPU_MATI   98
-
-
-        EasyLib easyHub;
-
-        int controlHandlerLampu(BinaryControl *bi) {
-                if (bi->isActionTrue()) {
-                        digitalWrite(13, HIGH);
-                        return 100;
-                } else if (bi->isActionFalse()) {
-                        digitalWrite(13, LOW);
-                        return 101;
-                } else {
-                        return 102;
-
-                }
-
-        }
-        void setup() {
-
-                pinMode(13, OUTPUT);
-                pinMode(2, OUTPUT);
-                Serial.begin(57600);
-                BinaryControl *lampu = new BinaryControl(ID_SERVICE_LAMPU, ID_CONTROL_LAMPU, NILAI_LAMPU_NYALA, NILAI_LAMPU_MATI,
-                                NILAI_LAMPU_NYALA);
-                lampu->registryControlHandler(&controlHandlerLampu);
-                easyHub.registerBinaryControl(lampu);
-        }
-
-        void loop() {
-
-                easyHub.run();
-
-        }
-
-
-
-        </pre>
+        <pre id="editor">null</pre>
 
         <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <!-- load ace -->
@@ -79,6 +36,7 @@
             editor.setTheme("ace/theme/eclipse");
             editor.setFontSize(17)
             editor.session.setMode("ace/mode/c_cpp");
+            
             editor.setOptions({
                 enableBasicAutocompletion: true,
                 enableSnippets: true,
@@ -88,11 +46,13 @@
 
 
 
-            function  getvalueEditor() {
+            function  getValueEditor() {
                 return editor.getValue();
             }
             function  setValueEditor(value) {
                 editor.setValue(value);
+                editor.gotoPageUp();
+                
             }
 
 //            console.log(editor.getValue());

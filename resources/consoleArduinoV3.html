@@ -24,7 +24,7 @@
         <script src="js/docs.js"></script>
         <script src="js/prettify/run_prettify.js"></script>
         <script src="js/ga.js"></script>
-        <script src="Loader.js"></script>
+        <script src="consoleLoader2.js"></script>
 
 
 
@@ -98,8 +98,8 @@
                             </div><br/><br>
 
                             <label class="fg-black">Board Name</label><br>
-                            <div class="input-control select">
-                                <select>
+                            <div class="input-control select" style=" position: relative; z-index: 30;" >
+                                <select style=" position: relative;z-index: 30;">
                                     <option>Arduino Uno</option>
                                     <option>Arduino nano</option>
                                     <option>Arduino pro mini</option>
@@ -122,15 +122,6 @@
                     </td>
                 </tr>
             </table>
-            <!--            <div style="height: 100%; width: 150px;" class="bg-dark">
-
-                        </div>-->
-            <!--<div style="height: 100%; width: 500px;" class="bg-gray">-->
-            <!--<div>-->
-
-            <!--</div>-->
-
-            <!--</div>-->
         </div>
 
 
@@ -267,22 +258,15 @@
                 <div class="cell  colspan10 ">
                     <div class="tabcontrol2 "  data-role="tabcontrol" data-open-target="#frame_5_1" >
                         <ul class="tabs" id="tabCode">
-                            <li><a href="#frame_5_1">Code</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
-                            <li><a href="#frame_5_2">Minum</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
-                            <li><a href="#frame_5_2">Makan</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
+                            <li><a href="#frame_5_1">Start</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
+<!--                            <li><a href="#frame_5_2">Minum</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
+                            <li><a href="#frame_5_3">Makan</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>-->
                         </ul>
-
                         <div class="frames bordered" id="tabSource" >
-                            <div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">
-                                <iframe id="frameCode" name="frameCode" frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
+                            <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px;" >
+                                <iframe id="codeEditor" class="disabled"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
                             </div>
-                            <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px">
-                                <iframe   frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
-                            </div>
-                            <div class="frame" id="frame_5_2" style="margin-top: 0px;padding: 0px">
-
-                            </div>
-                        </div>                                    
+                        </div>
                     </div>
                 </div>
             </div>
@@ -313,6 +297,9 @@
                 <div class="cell debug">12</div>
             </div>
         </div>
-
+        <div  data-role="dialog" id="dialog9" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px">
+            <h3 align="center" class="text-light">Fetching code</h3>
+            <div style="width: 400px;color:  transparent" data-role="preloader" data-type="metro" data-style="color"></div>
+        </div>
     </body>
 </html>

@@ -28,6 +28,11 @@
   line-height: 0.75em;
   vertical-align: -35%;
 }
+.mif-1k2x {
+  font-size: 1.4rem;
+  vertical-align: -22%;
+}
+
 .mif-2x {
   font-size: 1.75rem;
   vertical-align: -25%;
@@ -190,6 +195,7 @@
 .fg-focus-lime:focus {
   color: #a4c400 !important;
 }
+
 .fg-green {
   color: #60a917 !important;
 }
@@ -919,6 +925,10 @@
 .fg-hover-yellow:hover {
   color: #e3c800 !important;
 }
+.fg-hover-blue:hover {
+  color: #1ba1e2 !important;
+}
+
 .fg-active-yellow:active {
   color: #e3c800 !important;
 }
