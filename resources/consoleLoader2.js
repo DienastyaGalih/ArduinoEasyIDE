@@ -5,40 +5,14 @@
  */
 
 var project;
-
-
-var tab = function () {
-    this.fileId = "";
-    this.fileName = "";
-    this.sourceCode = "";
-}
-
-var tabProject = function () {
-    this.tabActive = 0;
-    this.maximumTab = 6;
-    this.tabFiles = [];
-
-    this.addTab = function (tab) {
-//        alert("masuk tab");
-        this.tabFiles[this.tabFiles.lenght++] = tab;
-//        this.tabFiles[0] = tab;
-//        this.tabActive = this.tabFiles.lenght;
-
-//        return ;
-    }
-
-    this.getTabActive = function () {
-        return this.tabFiles[this.tabActive];
-    }
-
-    this.selectTab = function (numberTab) {
-        return this.tabFiles[numberTab];
-    }
-}
+var tabFileArrayID = [];
+var tabActive = 0;
+var countingTabArrayId = 0;
 
 
 
-var tabProjectActive = new tabProject();
+
+//var tabProjectActive = new tabProject();
 
 $(document).ready(function () {
     console.log("document loaded");
@@ -64,6 +38,67 @@ $(document).ready(function () {
         alert("finished");
     });
 
+
+
+    $("#saveProject").click(function () {
+        // Send the data using post
+
+        alert("saving " + tabFileArrayID[0]);
+
+        var $f = $('#codeSource_' + tabFileArrayID[0]);
+        var data = $f.get(0).contentWindow.getValueEditor();
+        alert(data + " data source");
+
+//        $.post("http://localhost:8080/project/saveFile/make", {idFile: tabFileArrayID[0], sourceFile: "makan && minum"})
+//                .done(function (data) {
+//                    alert("Data Loaded: " + data.makan);
+//                }).fail(function (data) {
+//            alert("error " + data);
+//        });
+
+
+
+        $.ajax({
+            url: 'http://localhost:8080/project/saveFile/'+tabFileArrayID[0],
+            type: "POST",
+            processData: false,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (message) {
+                // Do something with response
+                alert(message.makan);
+            }
+        });
+
+
+
+
+//        var posting = $.post("http://localhost:8080/project/saveFile/", JSON.stringify({idFile: "galih", projectValue: tabFileArrayID[0]}), function () {
+//            alert("succes " );
+//        }, "json");
+//
+//        posting.done(function (data) {
+//            alert("finish save " + data);
+////            $("textarea#debug").val(data);
+////            showDialog('dialog9');
+////            $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
+//        });
+
+
+//        for (var i = 0; i < tabFileArrayID.lenght; i++) {
+//            var posting = $.post(url, {idFile: "galih", projectValue: tabFileArrayID[i]});
+//
+//
+//            // Put the results in a div
+//            posting.done(function (data) {
+//                alert("finish save " + data);
+////            $("textarea#debug").val(data);
+////            showDialog('dialog9');
+////            $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
+//            });
+//        }
+
+    });
 
 
     $("#backButtonPanel").click(function () {
@@ -118,6 +153,7 @@ function updateProjectStructure(project) {
 
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
+            tabActive = event.target.id;
             alert(event.target.id);
             $("#dialog9").data('dialog').open();
             addTabFile(event.target.id)
@@ -131,10 +167,12 @@ function updateProjectStructure(project) {
 
 function addTabFile(idFIle) {
 
+
     var tmp = idFIle.split('_', 3);
     idFIle = tmp[1];
     var fileName = tmp[2];
 
+    tabFileArrayID[countingTabArrayId++] = idFIle;
 
 //    var tabFileId = 'frame_' + idFIle.replace(".", "").replace("/", "");
 
@@ -147,12 +185,6 @@ function addTabFile(idFIle) {
             '</div>';
 
     $("#tabSource").append(sourcePane);
-
-
-
-
-
-
 
     $("#dialog9").data('dialog').close();
 
@@ -167,8 +199,8 @@ function addTabFile(idFIle) {
 
 }
 
-function closeTab(idFile){
-    
+function closeTab(idFile) {
+
 }
 
 /**

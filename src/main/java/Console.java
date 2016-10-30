@@ -73,39 +73,37 @@ public class Console extends AbstractVerticle {
             }
         });
 
-        //file save handler 
-        router.post("/project/saveFile/:fileId").handler(ctx -> {
-            ctx.response().putHeader("Content-Type", "text/plain");
-
-            ctx.response().setChunked(true);
-
-            ctx.request().bodyHandler(hndlr -> {
-                System.out.println(new String(hndlr.getBytes()));
-
-                ctx.response().end("terimakaish");
-            });
-
-        });
-
-        router.post("/project/create").handler(ctx -> {
-            ctx.response().putHeader("Content-Type", "text/plain");
-
-            ctx.response().setChunked(true);
-
-            ctx.request().bodyHandler(hndlr -> {
-                System.out.println(new String(hndlr.getBytes()));
-
-                ctx.response().end("terimakaish");
-            });
-
-        });
-
+//        //file save handler 
+//        router.post("/project/saveFile/:fileId").handler(ctx -> {
+//            ctx.response().putHeader("Content-Type", "text/plain");
+//
+//            ctx.response().setChunked(true);
+//
+//            ctx.request().bodyHandler(hndlr -> {
+//                System.out.println(new String(hndlr.getBytes()));
+//
+//                ctx.response().end("terimakaish");
+//            });
+//
+//        });
+//        router.post("/project/create").handler(ctx -> {
+//            ctx.response().putHeader("Content-Type", "text/plain");
+//
+//            ctx.response().setChunked(true);
+//
+//            ctx.request().bodyHandler(hndlr -> {
+//                System.out.println(new String(hndlr.getBytes()));
+//
+//                ctx.response().end("terimakaish");
+//            });
+//
+//        });
         router.get("/project/openProject/:projectId").handler(this::handleOpenProject);
         router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
 
-        router.post("/project/createProject").handler(this::testing);
+        router.post("/project/createProject").handler(this::handleCreateProject);
 
-        router.post("/project/saveFile/:fileId").handler(this::testing);
+        router.post("/project/saveFile/:fileId").handler(this::handleSaveFile);
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
 
@@ -151,6 +149,33 @@ public class Console extends AbstractVerticle {
                 response.end(fileSource);
             }
         }
+    }
+
+    private void handleCreateProject(RoutingContext routingContext) {
+        JsonObject project = new JsonObject(routingContext.getBodyAsString());
+        project.getString("name");
+        project.getString("board");
+        project.getString("ic");
+        project.getString("detail");
+        project.getString("visibility");
+        HttpServerResponse response = routingContext.response();
+    }
+
+    private void handleSaveFile(RoutingContext routingContext) {
+        
+        
+        String idFile = routingContext.request().getParam("fileId");
+        routingContext.response().putHeader("content-type", "application/json");
+
+        routingContext.response().setChunked(true);
+
+        routingContext.request().bodyHandler(hndlr -> {
+            System.out.println("File id : "+idFile);
+            System.out.println("request : "+new String(hndlr.getBytes()));
+            
+            routingContext.response().end(new JsonObject().put("makan", "finish").put("id", idFile).toString());
+        });
+
     }
 
     private void testing(RoutingContext routingContext) {

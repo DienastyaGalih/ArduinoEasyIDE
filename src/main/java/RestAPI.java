@@ -53,19 +53,28 @@ public class RestAPI extends AbstractVerticle {
     }
 
     private void handleAddProduct(RoutingContext routingContext) {
-        String productID = routingContext.request().getParam("productID");
+        
+        JsonObject project=new JsonObject(routingContext.getBodyAsString());
+        
+        project.getString("name");
+        project.getString("board");
+        project.getString("ic");
+        project.getString("detail");
+        project.getString("visibility");
+//        System.out.println("from post "+routingContext.getBodyAsString());
+//        String productID = routingContext.request().getParam("productID");
         HttpServerResponse response = routingContext.response();
-        if (productID == null) {
-            sendError(400, response);
-        } else {
-            JsonObject product = routingContext.getBodyAsJson();
-            if (product == null) {
-                sendError(400, response);
-            } else {
-                products.put(productID, product);
+//        if (productID == null) {
+//            sendError(400, response);
+//        } else {
+//            JsonObject product = routingContext.getBodyAsJson();
+//            if (product == null) {
+//                sendError(400, response);
+//            } else {
+//                products.put(productID, product);
                 response.end();
-            }
-        }
+//            }
+//        }
     }
 
     private void handleListProducts(RoutingContext routingContext) {
