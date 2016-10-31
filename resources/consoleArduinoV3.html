@@ -43,7 +43,7 @@
                                 <a href="#"><span class="title" style="padding-left: 21px">New Project</span></a>
                             </li>
                             <li  id="openProjectButton" class="sideBarLi"> 
-                                <a href="#"  ><span class="title " style="padding-left: 21px">Open Project</span></a>
+                                <a href="#" ><span class="title " style="padding-left: 21px">Open Project</span></a>
                             </li>
                             <li  class="sideBarLi">
                                 <a href="#"><span class="title " style="padding-left: 21px">Setting</span></a>
@@ -58,32 +58,17 @@
                             <br>
                             <h2 class="fg-black text-light border">Open Project</h2>
                             <br>
-                            <ul class="sidebar navy " style="width: 100%; padding-right: 0px ;margin-right: 0px">
-                                <li style="height: 50px;"  >
-                                    <a href="#" >
-                                        <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
-                                        <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
-                                    </a>
-                                </li>
-                                <li class="selected" style="height: 50px; "  >
-                                    <a href="#">
-                                        <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">P mush memakan berkaki </span>
-                                        <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
-                                    </a>
-                                </li>
-                                <li style="height: 50px;"  >
-                                    <a href="#" >
-                                        <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
-                                        <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
-                                    </a>
-                                </li>
-                                <li style="height: 50px;"  >
-                                    <a href="#" >
-                                        <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
-                                        <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
-                                    </a>
-                                </li>
-                            </ul>    
+                            <div style="height:450px;width:99%;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+
+                                <ul class="sidebar navy " id="panelListOfProject" style="width: 100%; padding-right: 0px ;margin-right: 0px">
+                                    <li style="height: 50px;"  >
+                                        <a href="#" >
+                                            <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
+                                            <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
+                                        </a>
+                                    </li>
+                                </ul>    
+                            </div><br>
                             <button class="button">Open</button>
                         </div>
 
@@ -94,20 +79,20 @@
                             <br>
                             <label class="fg-black">Project name</label><br>
                             <div class="input-control text">
-                                <input type="text" placeholder="Project name">
+                                <input type="text" id="namaProject_create" placeholder="Project name">
                             </div><br/><br>
 
-                            <label class="fg-black">Board Name</label><br>
-                            <div class="input-control select" style=" position: relative; z-index: 30;" >
-                                <select style=" position: relative;z-index: 30;">
+                            <label class="fg-black">Board Type</label><br>
+                            <div class="input-control select"  >
+                                <select id="boardType_create" >
                                     <option>Arduino Uno</option>
                                     <option>Arduino nano</option>
                                     <option>Arduino pro mini</option>
                                 </select>
                             </div><br/><br>
-                            <label class="fg-black">IC name</label><br>
+                            <label class="fg-black">IC Type</label><br>
                             <div class="input-control select">
-                                <select>
+                                <select id="icType_create" >
                                     <option>Atmega 32p 5v</option>
                                     <option>Atmega 32p 3.3v</option>
                                     <option>Atmega 32u 5v</option>
@@ -115,7 +100,7 @@
                             </div><br><br>
                             <label class="fg-black">Visibility</label><br>
                             <div class="input-control select">
-                                <select>
+                                <select id="visibility_create">
                                     <option>Private</option>
                                     <option>Public</option>
                                     <option>Friend</option>
@@ -123,9 +108,9 @@
                             </div><br><br>
                             <label class="fg-black">Detail</label><br>
                             <div class="input-control textarea" style="width:193px">
-                                <textarea placeholder="Detail..." cols="50" ></textarea>
+                                <textarea id="detail" placeholder="Detail..." cols="50" ></textarea>
                             </div><br/>
-                            <button class="button">Create</button>
+                            <button class="button" id="createProject_create">Create</button>
                         </div>
                     </td>
                 </tr>
@@ -161,12 +146,12 @@
                         <div class="tab-group-caption " style="padding: 2px" >Run</div>
                     </div>
                     <div class="tab-panel-group">
-                        <div class="tab-content-segment">
+                        <div class="tab-content-segment" >
                             <button class="fluent-big-button dropdown-toggle" >
                                 <span  class="on-left"><img  src="images/arduinoNewedda.png"></span>
                                 <span class="label" id="arduinoType">Arduino Board</span>
                             </button>
-                            <ul class="d-menu" data-role="dropdown">
+                            <ul class="d-menu" data-role="dropdown"  >
                                 <li><a href="#">Arduino nano</a></li>
                                 <li><a href="#">Mega Duino</a></li>
                                 <li class="divider"></li>
@@ -267,8 +252,8 @@
                     <div class="tabcontrol2 "  data-role="tabcontrol" data-open-target="#frame_5_1" >
                         <ul class="tabs" id="tabCode">
                             <li><a href="#frame_5_1">Start</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
-<!--                            <li><a href="#frame_5_2">Minum</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
-                            <li><a href="#frame_5_3">Makan</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>-->
+                            <!--                            <li><a href="#frame_5_2">Minum</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
+                                                        <li><a href="#frame_5_3">Makan</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>-->
                         </ul>
                         <div class="frames bordered" id="tabSource" >
                             <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px;" >

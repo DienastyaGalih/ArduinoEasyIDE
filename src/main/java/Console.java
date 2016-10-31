@@ -9,6 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Route;
@@ -101,15 +102,20 @@ public class Console extends AbstractVerticle {
         router.get("/project/openProject/:projectId").handler(this::handleOpenProject);
         router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
 
-        router.post("/project/createProject").handler(this::handleCreateProject);
+        router.post("/project/create").handler(this::handleCreateProject);
 
         router.post("/project/saveFile/:fileId").handler(this::handleSaveFile);
+
+        router.get("/project/getListProject").handler(this::handleGetListProject);
+
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
 
         server.requestHandler(router::accept).listen(8080);
-
         vertx.deployVerticle(new RestAPI());
+        
+        DbHelper.getInstance().init(vertx);
+        DbHelper.getInstance().selectUser();
 
     }
 
@@ -152,33 +158,51 @@ public class Console extends AbstractVerticle {
     }
 
     private void handleCreateProject(RoutingContext routingContext) {
-        JsonObject project = new JsonObject(routingContext.getBodyAsString());
-        project.getString("name");
-        project.getString("board");
-        project.getString("ic");
-        project.getString("detail");
-        project.getString("visibility");
-        HttpServerResponse response = routingContext.response();
+
+        routingContext.response().putHeader("content-type", "application/json");
+
+        routingContext.request().bodyHandler(hndlr -> {
+            JsonObject project = hndlr.toJsonObject();
+            System.out.println(project.toString());
+
+            project.getString("name");
+            project.getString("board");
+            project.getString("ic");
+            project.getString("detail");
+            project.getString("visibility");
+
+            routingContext.response().end(new JsonObject().put("makan", "finish").toString());
+        });
+
     }
 
     private void handleSaveFile(RoutingContext routingContext) {
-        
-        
+
         String idFile = routingContext.request().getParam("fileId");
         routingContext.response().putHeader("content-type", "application/json");
 
         routingContext.response().setChunked(true);
 
         routingContext.request().bodyHandler(hndlr -> {
-            System.out.println("File id : "+idFile);
-            System.out.println("request : "+new String(hndlr.getBytes()));
-            
+            System.out.println("File id : " + idFile);
+            System.out.println("request : " + new String(hndlr.getBytes()));
+
             routingContext.response().end(new JsonObject().put("makan", "finish").put("id", idFile).toString());
         });
 
     }
 
-    private void testing(RoutingContext routingContext) {
+    private void handleGetListProject(RoutingContext routingContext) {
+        HttpServerResponse response = routingContext.response();
+        
+        JsonArray lissat=DbHelper.getInstance().getListProject("galih");
+
+        response.putHeader("content-type", "application/json").end(lissat.toString());
+
+    
+}
+
+private void testing(RoutingContext routingContext) {
 
     }
 

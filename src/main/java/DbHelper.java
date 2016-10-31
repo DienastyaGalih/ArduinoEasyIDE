@@ -1,9 +1,12 @@
 
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.AsyncSQLClient;
 import io.vertx.ext.asyncsql.MySQLClient;
 import io.vertx.ext.asyncsql.PostgreSQLClient;
+import io.vertx.ext.sql.ResultSet;
+import io.vertx.ext.sql.SQLConnection;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,7 +20,7 @@ import io.vertx.ext.asyncsql.PostgreSQLClient;
 public class DbHelper {
 
     static DbHelper dbHelper;
-    AsyncSQLClient postgreSQLClient;
+    AsyncSQLClient mySQLClient;
 
     static public DbHelper getInstance() {
         if (dbHelper == null) {
@@ -28,14 +31,57 @@ public class DbHelper {
 
     public void init(Vertx vertx) {
         JsonObject mysqlConfig = new JsonObject()
-                //                .put("host", "31.220.54.10")
+                .put("host", "127.0.0.1")
                 //                .put("port", 5432)
                 .put("maxPoolSize", 1000)
-                .put("username", "kukuliner")
+                .put("username", "root")
                 .put("password", "budiman1994")
-                .put("database", "kulikuliner")
+                .put("database", "arduinoeasydb")
                 .put("queryTimeout", 7000);
-        this.postgreSQLClient = MySQLClient.createShared(vertx, mysqlConfig);
+        this.mySQLClient = MySQLClient.createShared(vertx, mysqlConfig);
+        mySQLClient.getConnection(conHandler -> {
+            System.out.println(conHandler.cause());
+        });
+    }
+
+    public void selectUser() {
+        String query = "SELECT * FROM `user_2` WHERE 1";
+
+        mySQLClient.getConnection(resConnection -> {
+
+            System.out.println(resConnection.cause().toString());
+            if (resConnection.succeeded()) {
+                SQLConnection connection;
+                connection = resConnection.result();
+
+                connection.setAutoCommit(false, autoCommit -> {
+                    if (autoCommit.succeeded()) {
+
+                        connection.query(query, handlerQuery -> {
+                            if (handlerQuery.succeeded()) {
+
+                                ResultSet resultSet = handlerQuery.result();
+                                String resultJSON = resultSet.getRows().get(0).toString();
+                                System.out.println(resultJSON + " resilasdfaslkd");
+
+                            } else {
+
+                                System.out.println("failed");
+                            }
+                            connection.close();
+                        });
+                    } else {
+                        System.out.println("auto commit failed");
+                    }
+
+                });
+
+                // Got a connection
+            } else {
+                // Failed to get connection - deal with it
+                System.out.println("true failes");
+            }
+        });
     }
 
     public DbHelper() {
@@ -186,6 +232,33 @@ public class DbHelper {
                 + "\n"
                 + "";
         return new JsonObject(returnDummy);
+    }
+
+    public JsonArray getListProject(String username) {
+        String returnList = "[\n"
+                + "    {\n"
+                + "        \"name\": \"nameProject\",\n"
+                + "        \"id\": \"1\",\n"
+                + "        \"date\": \"11-2-1994\"\n"
+                + "    },\n"
+                + "    {\n"
+                + "        \"name\": \"nameProject\",\n"
+                + "        \"id\": \"1\",\n"
+                + "        \"date\": \"11-2-1994\"\n"
+                + "    },\n"
+                + "    {\n"
+                + "        \"name\": \"nameProject\",\n"
+                + "        \"id\": \"1\",\n"
+                + "        \"date\": \"11-2-1994\"\n"
+                + "    },\n"
+                + "    {\n"
+                + "        \"name\": \"nameProject\",\n"
+                + "        \"id\": \"1\",\n"
+                + "        \"date\": \"11-2-1994\"\n"
+                + "    }    \n"
+                + "]";
+
+        return new JsonArray(returnList);
     }
 
     public String getFileSource(String username, String fileId) {

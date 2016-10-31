@@ -8,10 +8,6 @@ var project;
 var tabFileArrayID = [];
 var tabActive = 0;
 var countingTabArrayId = 0;
-
-
-
-
 //var tabProjectActive = new tabProject();
 
 $(document).ready(function () {
@@ -19,17 +15,10 @@ $(document).ready(function () {
     var jqxhr = $.get("http://localhost:8080/project/openProject/makan", function (data) {
 
         project = data;
-
-
-
         $("#projectName").text("~" + project.name);
         $("#arduinoType").text(project.config.arduinoType);
         $("#arduinoIC").text(project.config.icType);
-
         updateProjectStructure(project.sourceCode);
-
-
-
     }).done(function () {
         alert("second success ");
     }).fail(function (detail) {
@@ -37,29 +26,15 @@ $(document).ready(function () {
     }).always(function () {
         alert("finished");
     });
-
-
-
     $("#saveProject").click(function () {
-        // Send the data using post
+// Send the data using post
 
         alert("saving " + tabFileArrayID[0]);
-
         var $f = $('#codeSource_' + tabFileArrayID[0]);
         var data = $f.get(0).contentWindow.getValueEditor();
         alert(data + " data source");
-
-//        $.post("http://localhost:8080/project/saveFile/make", {idFile: tabFileArrayID[0], sourceFile: "makan && minum"})
-//                .done(function (data) {
-//                    alert("Data Loaded: " + data.makan);
-//                }).fail(function (data) {
-//            alert("error " + data);
-//        });
-
-
-
         $.ajax({
-            url: 'http://localhost:8080/project/saveFile/'+tabFileArrayID[0],
+            url: 'http://localhost:8080/project/saveFile/' + tabFileArrayID[0],
             type: "POST",
             processData: false,
             data: JSON.stringify(data),
@@ -69,74 +44,62 @@ $(document).ready(function () {
                 alert(message.makan);
             }
         });
-
-
-
-
-//        var posting = $.post("http://localhost:8080/project/saveFile/", JSON.stringify({idFile: "galih", projectValue: tabFileArrayID[0]}), function () {
-//            alert("succes " );
-//        }, "json");
-//
-//        posting.done(function (data) {
-//            alert("finish save " + data);
-////            $("textarea#debug").val(data);
-////            showDialog('dialog9');
-////            $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
-//        });
-
-
-//        for (var i = 0; i < tabFileArrayID.lenght; i++) {
-//            var posting = $.post(url, {idFile: "galih", projectValue: tabFileArrayID[i]});
-//
-//
-//            // Put the results in a div
-//            posting.done(function (data) {
-//                alert("finish save " + data);
-////            $("textarea#debug").val(data);
-////            showDialog('dialog9');
-////            $('textarea#debug').scrollTop($('textarea#debug')[0].scrollHeight);
-//            });
-//        }
-
     });
+    $("#createProject_create").click(function () {
+
+        var projectName = $("#namaProject_create").val();
+        var boardType = $("#boardType_create").val();
+        var icType = $("#icType_create").val();
+        var visibility = $("#visibility_create").val();
+        var detail = $("#detail_create").val();
+        alert(boardType);
+        var data = {
+            name: projectName + "",
+            board: boardType,
+            ic: icType,
+            detail: visibility,
+            visibility: detail
+        }
 
 
+        $.ajax({
+            url: 'http://localhost:8080/project/create/',
+            type: "POST",
+            processData: false,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (message) {
+                // Do something with response
+                alert(message.makan);
+            }
+        });
+    });
     $("#backButtonPanel").click(function () {
         var charm = $("#menu-special").data("charm");
-
         charm.close();
     });
-
     $("#newProjectButton").click(function () {
 
         $(".sideBarLi").removeClass("active");
         $("#newProjectButton").addClass("active");
-
-        $(".sidePanelMenuFile").hide( );
-        $("#newProjectPanel").show( );
+        $(".sidePanelMenuFile").hide();
+        $("#newProjectPanel").show();
     });
-
-
     $("#openProjectButton").click(function () {
         $(".sideBarLi").removeClass("active");
         $("#openProjectButton").addClass("active");
-
+        getListAllProject();
         $(".sidePanelMenuFile").hide();
-        $("#openProjectPanel").show( );
+        $("#openProjectPanel").show();
     });
-
-
-
     $("#virifyButton").click(function (event) {
         var $f = $("#frameCode");
         $f.get(0).contentWindow.setValueEditor("makan"); //works    
     });
-
 });
 $(window).load(function () {
 
 });
-
 function updateProjectStructure(project) {
     //render file project
 
@@ -150,7 +113,6 @@ function updateProjectStructure(project) {
         filesText += addFile(project.files[i]);
     }
     $("#projectBar").append(filesText);
-
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
             tabActive = event.target.id;
@@ -160,8 +122,6 @@ function updateProjectStructure(project) {
 
         });
     });
-
-
 }
 
 
@@ -171,9 +131,7 @@ function addTabFile(idFIle) {
     var tmp = idFIle.split('_', 3);
     idFIle = tmp[1];
     var fileName = tmp[2];
-
     tabFileArrayID[countingTabArrayId++] = idFIle;
-
 //    var tabFileId = 'frame_' + idFIle.replace(".", "").replace("/", "");
 
     var tabFileId = "fileTab_" + idFIle;
@@ -183,20 +141,13 @@ function addTabFile(idFIle) {
     var sourcePane = '<div class="frame" id="' + sourceFileId + '" style="margin-top: 0px;padding: 0px">' +
             '<iframe id="' + codeFileId + '"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>' +
             '</div>';
-
     $("#tabSource").append(sourcePane);
-
     $("#dialog9").data('dialog').close();
-
-
     $(document).ready(function () {
         $(".tabPanel").click(function (event) {
             requestCodeSource(codeFileId);
-
         });
     });
-
-
 }
 
 function closeTab(idFile) {
@@ -224,12 +175,11 @@ function requestCodeSource(codeFileId) {
     }).always(function () {
         alert("finished");
     });
-
 }
 
 
 function addFolder(folder) {
-    //find folder
+//find folder
     var filesText = "";
     for (var p = 0; p < folder.files.length; p++) {
         filesText += addSubFile(folder.files[p], folder.name);
@@ -257,6 +207,44 @@ function specialClick() {
 }
 
 function getFileSourceFromEditor() {
+
+}
+
+function reloadProject(idProject){
+    alert('reload project '+idProject);
+}
+
+
+function getListAllProject() {
+    var makeUI = $.get("http://localhost:8080/project/getListProject", function (data) {
+//        alert("dat "+data);
+
+        var projectName = data[0].name;
+        var dateModified = data[0].date;
+        var idProjectInListOpen = data[0].id + "_list"
+
+        var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
+                '<a href = "#" >' +
+                '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
+                '<img style = "margin-right: 7px"  src = "images/arduinoProjectIcon.png" width = "25" >' + projectName + '</span>' +
+                '<span class = "title fg-dark text-light" style = "margin-left: 42px;margin-top:-17px; font-size: 11px"> ' + dateModified + '</span>' +
+                '</a>' +
+                '</li>';
+        $("#panelListOfProject").append(list);
+
+        $(".listProject_open").dblclick(function (event) {
+//            alert("projectA kilkasd " + data[0].id );
+            reloadProject(data[0].id);
+            
+        });
+        
+    }).done(function () {
+        alert("second success ");
+    }).fail(function (data) {
+        alert("error " + data);
+    }).always(function () {
+        alert("finished");
+    });
 
 
 
