@@ -1,4 +1,6 @@
 
+import Data.Project;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -7,6 +9,8 @@ import io.vertx.ext.asyncsql.MySQLClient;
 import io.vertx.ext.asyncsql.PostgreSQLClient;
 import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.SQLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -34,8 +38,8 @@ public class DbHelper {
                 .put("host", "127.0.0.1")
                 //                .put("port", 5432)
                 .put("maxPoolSize", 1000)
-                .put("username", "root")
-                .put("password", "budiman1994")
+                .put("username", "admin")
+                .put("password", "212")
                 .put("database", "arduinoeasydb")
                 .put("queryTimeout", 7000);
         this.mySQLClient = MySQLClient.createShared(vertx, mysqlConfig);
@@ -49,7 +53,6 @@ public class DbHelper {
 
         mySQLClient.getConnection(resConnection -> {
 
-            System.out.println(resConnection.cause().toString());
             if (resConnection.succeeded()) {
                 SQLConnection connection;
                 connection = resConnection.result();
@@ -234,31 +237,70 @@ public class DbHelper {
         return new JsonObject(returnDummy);
     }
 
-    public JsonArray getListProject(String username) {
-        String returnList = "[\n"
-                + "    {\n"
-                + "        \"name\": \"nameProject\",\n"
-                + "        \"id\": \"1\",\n"
-                + "        \"date\": \"11-2-1994\"\n"
-                + "    },\n"
-                + "    {\n"
-                + "        \"name\": \"nameProject\",\n"
-                + "        \"id\": \"1\",\n"
-                + "        \"date\": \"11-2-1994\"\n"
-                + "    },\n"
-                + "    {\n"
-                + "        \"name\": \"nameProject\",\n"
-                + "        \"id\": \"1\",\n"
-                + "        \"date\": \"11-2-1994\"\n"
-                + "    },\n"
-                + "    {\n"
-                + "        \"name\": \"nameProject\",\n"
-                + "        \"id\": \"1\",\n"
-                + "        \"date\": \"11-2-1994\"\n"
-                + "    }    \n"
-                + "]";
+    public JsonArray getListProject(String username, Handler<List<JsonObject>> handler) {
 
-        return new JsonArray(returnList);
+        String query = "SELECT pk_id_project as id , `name`, modify_date as date FROM project WHERE `USER_2_user_name`='" + username + "';";
+
+        mySQLClient.getConnection(resConnection -> {
+
+            if (resConnection.succeeded()) {
+                SQLConnection connection;
+                connection = resConnection.result();
+
+                connection.setAutoCommit(false, autoCommit -> {
+                    if (autoCommit.succeeded()) {
+
+                        connection.query(query, handlerQuery -> {
+                            if (handlerQuery.succeeded()) {
+
+                                ResultSet resultSet = handlerQuery.result();
+                                
+//                                System.out.println(resultSet.getRows().toString());
+                                
+                                handler.handle(resultSet.getRows());
+
+                            } else {
+
+                                System.out.println("failed");
+                            }
+                            connection.close();
+                        });
+                    } else {
+                        System.out.println("auto commit failed");
+                    }
+
+                });
+
+                // Got a connection
+            } else {
+                // Failed to get connection - deal with it
+                System.out.println("true failes");
+            }
+        });
+
+//        String returnList = "[\n"
+//                + "    {\n"
+//                + "        \"name\": \"nameProject\",\n"
+//                + "        \"id\": \"1\",\n"
+//                + "        \"date\": \"11-2-1994\"\n"
+//                + "    },\n"
+//                + "    {\n"
+//                + "        \"name\": \"nameProject\",\n"
+//                + "        \"id\": \"1\",\n"
+//                + "        \"date\": \"11-2-1994\"\n"
+//                + "    },\n"
+//                + "    {\n"
+//                + "        \"name\": \"nameProject\",\n"
+//                + "        \"id\": \"1\",\n"
+//                + "        \"date\": \"11-2-1994\"\n"
+//                + "    },\n"
+//                + "    {\n"
+//                + "        \"name\": \"nameProject\",\n"
+//                + "        \"id\": \"1\",\n"
+//                + "        \"date\": \"11-2-1994\"\n"
+//                + "    }    \n"
+//                + "]";
+        return null;
     }
 
     public String getFileSource(String username, String fileId) {

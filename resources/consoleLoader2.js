@@ -210,34 +210,41 @@ function getFileSourceFromEditor() {
 
 }
 
-function reloadProject(idProject){
-    alert('reload project '+idProject);
+function reloadProject(idProject) {
+    alert('reload project ' + idProject);
 }
 
 
 function getListAllProject() {
     var makeUI = $.get("http://localhost:8080/project/getListProject", function (data) {
-//        alert("dat "+data);
+        alert("dat " + data.length);
 
-        var projectName = data[0].name;
-        var dateModified = data[0].date;
-        var idProjectInListOpen = data[0].id + "_list"
 
-        var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
-                '<a href = "#" >' +
-                '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
-                '<img style = "margin-right: 7px"  src = "images/arduinoProjectIcon.png" width = "25" >' + projectName + '</span>' +
-                '<span class = "title fg-dark text-light" style = "margin-left: 42px;margin-top:-17px; font-size: 11px"> ' + dateModified + '</span>' +
-                '</a>' +
-                '</li>';
-        $("#panelListOfProject").append(list);
+        $("#panelListOfProject").empty();
 
-        $(".listProject_open").dblclick(function (event) {
-//            alert("projectA kilkasd " + data[0].id );
-            reloadProject(data[0].id);
+        for (var p = 0; p < data.length; p++) {
             
-        });
-        
+
+            var projectName = data[p].name;
+            var dateModified = data[p].date;
+            var idProjectInListOpen = data[p].id + "_list"
+            var id=data[p].id+"";
+            alert("tambah incere "+idProjectInListOpen);
+            var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
+                    '<a href = "#" >' +
+                    '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
+                    '<img style = "margin-right: 7px"  src = "images/arduinoProjectIcon.png" width = "25" >' + projectName + '</span>' +
+                    '<span class = "title fg-dark text-light" style = "margin-left: 42px;margin-top:-17px; font-size: 11px"> ' + dateModified + '</span>' +
+                    '</a>' +
+                    '</li>';
+            $("#panelListOfProject").append(list);
+
+            $("#"+idProjectInListOpen).dblclick(function (event) {
+                reloadProject(this.id.split('_')[0]);
+            });
+            
+        }
+
     }).done(function () {
         alert("second success ");
     }).fail(function (data) {

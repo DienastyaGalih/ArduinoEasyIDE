@@ -1,0 +1,54 @@
+{
+    "id": 234,
+    "name": "nama project",
+    "detail": " detail of project",
+    "config": {
+        "arduinoType": "arduino uno",
+        "icType": "atmega 328p",
+        "acessbility": "private|public|friend",
+        "port": "com3"
+    },
+    "sourceCode": {
+        "folders": [
+            {
+                "name": "name folder",
+                "id": 345,
+                "dateModified": "11-feb-2014",
+                "dateCreated": "11-feb-2014",
+                "modifiedBy": "userId",
+                "files": [
+                    {
+                        "name": "name file",
+                        "id": 345,
+                        "dateModified": "11-feb-2014",
+                        "dateCreated": "11-feb-2014",
+                        "modifiedBy": "userId"
+                    },
+                    {
+                        "name": "name file",
+                        "id": 345,
+                        "dateModified": "11-feb-2014",
+                        "dateCreated": "11-feb-2014",
+                        "modifiedBy": "userId"
+                    }
+                ]
+            }
+        ],
+        "files": [
+            {
+                "name": "name file",
+                "id": 345,
+                "dateModified": "11-feb-2014",
+                "dateCreated": "11-feb-2014",
+                "modifiedBy": "userId"
+            },
+            {
+                "name": "name file",
+                "id": 345,
+                "dateModified": "11-feb-2014",
+                "dateCreated": "11-feb-2014",
+                "modifiedBy": "userId"
+            }
+        ]
+    }
+}

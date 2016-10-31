@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import Data.Project;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
@@ -20,6 +21,8 @@ import io.vertx.ext.web.handler.StaticHandler;
 
 public class Console extends AbstractVerticle {
 
+    String username = "galih1994";
+
     @Override
     public void start(Future<Void> fut) {
         HttpServer server = vertx.createHttpServer();
@@ -33,72 +36,13 @@ public class Console extends AbstractVerticle {
                 .setDirectoryListing(true)
                 .setMaxAgeSeconds(1000)
         );
-//        router.route().handler(CorsHandler.create("vertx\\.io").allowedMethod(HttpMethod.GET));
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("X-PINGARUNER")
                 .allowedHeader("Content-Type"));
-        router.get("/project/get/:projectName").handler(routingContext -> {
-            String projectName = routingContext.request().getParam("projectName");
-            System.out.println("project name " + projectName);
-            HttpServerResponse response = routingContext.response();
-            if (projectName == null) {
-                sendError(400, response);
-            } else {
-                JsonObject project = DbHelper.getInstance().getProject("", projectName);
-                System.out.println(project.toString());
-                if (project == null) {
-                    sendError(404, response);
-                } else {
-                    response.putHeader("content-type", "application/json").end(project.toString());
-                }
-            }
-        });
 
-        router.get("/project/get/file/:fileId").handler(routingContext -> {
-            String fileId = routingContext.request().getParam("fileId");
-            System.out.println("project name " + fileId);
-            HttpServerResponse response = routingContext.response();
-            if (fileId == null) {
-                sendError(400, response);
-            } else {
-                String fileSource = DbHelper.getInstance().getFileSource("", fileId);
-                System.out.println(fileSource.toString());
-                if (fileSource == null) {
-                    sendError(404, response);
-                } else {
-                    response.end(fileSource);
-                }
-            }
-        });
-
-//        //file save handler 
-//        router.post("/project/saveFile/:fileId").handler(ctx -> {
-//            ctx.response().putHeader("Content-Type", "text/plain");
-//
-//            ctx.response().setChunked(true);
-//
-//            ctx.request().bodyHandler(hndlr -> {
-//                System.out.println(new String(hndlr.getBytes()));
-//
-//                ctx.response().end("terimakaish");
-//            });
-//
-//        });
-//        router.post("/project/create").handler(ctx -> {
-//            ctx.response().putHeader("Content-Type", "text/plain");
-//
-//            ctx.response().setChunked(true);
-//
-//            ctx.request().bodyHandler(hndlr -> {
-//                System.out.println(new String(hndlr.getBytes()));
-//
-//                ctx.response().end("terimakaish");
-//            });
-//
-//        });
         router.get("/project/openProject/:projectId").handler(this::handleOpenProject);
         router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
 
@@ -113,9 +57,9 @@ public class Console extends AbstractVerticle {
 
         server.requestHandler(router::accept).listen(8080);
         vertx.deployVerticle(new RestAPI());
-        
+
         DbHelper.getInstance().init(vertx);
-        DbHelper.getInstance().selectUser();
+//        DbHelper.getInstance().getListProject(username);
 
     }
 
@@ -194,15 +138,15 @@ public class Console extends AbstractVerticle {
 
     private void handleGetListProject(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
-        
-        JsonArray lissat=DbHelper.getInstance().getListProject("galih");
 
-        response.putHeader("content-type", "application/json").end(lissat.toString());
+        JsonArray lissat = DbHelper.getInstance().getListProject(username, handler -> {
 
-    
-}
+            response.putHeader("content-type", "application/json").end(handler.toString());
+        });
 
-private void testing(RoutingContext routingContext) {
+    }
+
+    private void testing(RoutingContext routingContext) {
 
     }
 
