@@ -11,8 +11,8 @@ var countingTabArrayId = 0;
 //var tabProjectActive = new tabProject();
 
 $(document).ready(function () {
-    console.log("document loaded");
-    var jqxhr = $.get("http://localhost:8080/project/openProject/makan", function (data) {
+//    console.log("document loaded");
+    var jqxhr = $.get("http://localhost:8080/project/openProject/14", function (data) {
 
         project = data;
         $("#projectName").text("~" + project.name);
@@ -45,6 +45,14 @@ $(document).ready(function () {
             }
         });
     });
+
+
+
+    $("#createNewFile_fluent").click(function () {
+        var dialog = $("#createNewFile_dialog").data('dialog');
+        dialog.open();
+    });
+
     $("#createProject_create").click(function () {
 
         var projectName = $("#namaProject_create").val();
@@ -57,8 +65,8 @@ $(document).ready(function () {
             name: projectName + "",
             board: boardType,
             ic: icType,
-            detail: visibility,
-            visibility: detail
+            detail: detail,
+            visibility: visibility
         }
 
 
@@ -100,18 +108,24 @@ $(document).ready(function () {
 $(window).load(function () {
 
 });
+/**
+ * for deadline this day only can show lib and src
+ * @param {type} project
+ * @returns {undefined}
+ */
 function updateProjectStructure(project) {
     //render file project
 
     var filesText = "";
     var foldersText = "";
     alert("makan");
-    for (var p = 0; p < project.folders.length; p++) {
+    alert(project.folders.length);
+    for (var p = 0; p < project.folders.length-1; p++) {
         filesText += addFolder(project.folders[p]);
     }
-    for (var i = 0; i < project.files.length; i++) {
-        filesText += addFile(project.files[i]);
-    }
+//    for (var i = 0; i < project.files.length; i++) {
+//        filesText += addFile(project.files[i]);
+//    }
     $("#projectBar").append(filesText);
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
@@ -182,8 +196,10 @@ function addFolder(folder) {
 //find folder
     var filesText = "";
     for (var p = 0; p < folder.files.length; p++) {
+        
         filesText += addSubFile(folder.files[p], folder.name);
     }
+    alert(filesText);
     return '<li class="node" ><span class="leaf"><span class="mif-folder"></span> ' + folder.name + '</span><span class="node-toggle"></span><ul>' + filesText + '</ul></li>';
 }
 
@@ -223,13 +239,13 @@ function getListAllProject() {
         $("#panelListOfProject").empty();
 
         for (var p = 0; p < data.length; p++) {
-            
+
 
             var projectName = data[p].name;
             var dateModified = data[p].date;
             var idProjectInListOpen = data[p].id + "_list"
-            var id=data[p].id+"";
-            alert("tambah incere "+idProjectInListOpen);
+            var id = data[p].id + "";
+            alert("tambah incere " + idProjectInListOpen);
             var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
                     '<a href = "#" >' +
                     '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
@@ -239,10 +255,10 @@ function getListAllProject() {
                     '</li>';
             $("#panelListOfProject").append(list);
 
-            $("#"+idProjectInListOpen).dblclick(function (event) {
+            $("#" + idProjectInListOpen).dblclick(function (event) {
                 reloadProject(this.id.split('_')[0]);
             });
-            
+
         }
 
     }).done(function () {

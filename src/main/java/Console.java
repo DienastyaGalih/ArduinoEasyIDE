@@ -18,6 +18,8 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Console extends AbstractVerticle {
 
@@ -47,19 +49,18 @@ public class Console extends AbstractVerticle {
         router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
 
         router.post("/project/create").handler(this::handleCreateProject);
-
         router.post("/project/saveFile/:fileId").handler(this::handleSaveFile);
-
         router.get("/project/getListProject").handler(this::handleGetListProject);
-
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
+
+        router.get("/project/createFile/:folderId/:nameFile").handler(this::testing);
+        router.get("/project/createFolder/:folderId/:nameFile").handler(this::testing);
 
         server.requestHandler(router::accept).listen(8080);
         vertx.deployVerticle(new RestAPI());
 
         DbHelper.getInstance().init(vertx);
-//        DbHelper.getInstance().getListProject(username);
 
     }
 
@@ -68,20 +69,28 @@ public class Console extends AbstractVerticle {
     }
 
     private void handleOpenProject(RoutingContext routingContext) {
-        String projectName = routingContext.request().getParam("projectId");
-        System.out.println("projectId " + projectName);
-        HttpServerResponse response = routingContext.response();
-        if (projectName == null) {
-            sendError(400, response);
-        } else {
-            JsonObject project = DbHelper.getInstance().openProject("", projectName);
-            System.out.println(project.toString());
-            if (project == null) {
-                sendError(404, response);
-            } else {
-                response.putHeader("content-type", "application/json").end(project.toString());
-            }
-        }
+        String projectId = routingContext.request().getParam("projectId");
+       
+        
+        DbHelper.getInstance().getProject(projectId, handles -> {
+            HttpServerResponse response = routingContext.response();
+            response.putHeader("content-type", "application/json").end(handles.toString());
+        });
+//        DbHelper.getInstance().getProjectStructure(14+"");
+
+//        System.out.println("projectId " + projectName);
+//        HttpServerResponse response = routingContext.response();
+//        if (projectName == null) {
+//            sendError(400, response);
+//        } else {
+//            JsonObject project = DbHelper.getInstance().openProject("", projectName);
+//            System.out.println(project.toString());
+//            if (project == null) {
+//                sendError(404, response);
+//            } else {
+//        response.putHeader("content-type", "application/json").end(new JsonObject().put("finish", "fin").toString());
+//            }
+//        }
     }
 
     private void handleLoadFile(RoutingContext routingContext) {
@@ -106,16 +115,28 @@ public class Console extends AbstractVerticle {
         routingContext.response().putHeader("content-type", "application/json");
 
         routingContext.request().bodyHandler(hndlr -> {
+
+            System.out.println(hndlr.toString());
+
             JsonObject project = hndlr.toJsonObject();
-            System.out.println(project.toString());
 
-            project.getString("name");
-            project.getString("board");
-            project.getString("ic");
-            project.getString("detail");
-            project.getString("visibility");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
 
-            routingContext.response().end(new JsonObject().put("makan", "finish").toString());
+            DbHelper.getInstance().createProject(this.username,
+                    project.getString("name"),
+                    project.getString("detail"),
+                    project.getString("visibility"),
+                    dateFormat.format(date),
+                    dateFormat.format(date),
+                    project.getString("board"),
+                    project.getString("ic"),
+                    handler -> {
+
+                        routingContext.response().end(new JsonObject().put("makan", "finish").toString());
+
+                    });
+
         });
 
     }
@@ -139,8 +160,7 @@ public class Console extends AbstractVerticle {
     private void handleGetListProject(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
 
-        JsonArray lissat = DbHelper.getInstance().getListProject(username, handler -> {
-
+        DbHelper.getInstance().getListProject(username, handler -> {
             response.putHeader("content-type", "application/json").end(handler.toString());
         });
 

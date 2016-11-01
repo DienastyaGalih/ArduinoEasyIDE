@@ -108,7 +108,7 @@
                             </div><br><br>
                             <label class="fg-black">Detail</label><br>
                             <div class="input-control textarea" style="width:193px">
-                                <textarea id="detail" placeholder="Detail..." cols="50" ></textarea>
+                                <textarea id="detail_create" placeholder="Detail..." cols="50" ></textarea>
                             </div><br/>
                             <button class="button" id="createProject_create">Create</button>
                         </div>
@@ -126,6 +126,7 @@
                 <li class="active"><a href="#tab_mailings">Code</a></li>
                 <li><a href="#tab_folder">Folder</a></li>
                 <li><a href="#tab_view">View</a></li>
+                <li><a href="#tab_view">About</a></li>
                 <li class="bg-grayLighter" style="margin-top: 5px;margin-left: 10px;color: #8b7e96" id="projectName">Project Blinking project</li>
 
             </ul>
@@ -190,6 +191,20 @@
                         </div>
                         <div class="tab-group-caption " style="padding: 2px" >Saving</div>
                     </div>
+                    <div class="tab-panel-group">
+
+                        <!--<div>-->
+                        <!--<span  ><img  src="images/myProfile.PNG" width="90"></span><br>-->
+                        <!--<span class="label" id="arduinoType" >Dienastya Galih</span>-->
+                        <!--</div>-->
+
+                        <button class="fluent-big-button" style="width: 70px">
+                            <span  ><img  src="images/myProfile.PNG" ></span>
+                            <span class="label">Dienastya</span>
+                        </button>
+
+                        <div class="tab-group-caption   fg-white" style="padding: 2px; background-color: #ff3333" >Hire Me</div>
+                    </div>
                 </div>
 
 
@@ -197,7 +212,7 @@
 
                     <div class="tab-panel-group">
                         <div class="tab-group-content">
-                            <button class="fluent-big-button " style="width: 70px">
+                            <button id="createNewFile_fluent" class="fluent-big-button " style="width: 70px">
                                 <span class="icon mif-file-code" ></span>
                                 <span class="label" style="margin-top: 4px">Add File</span>
                             </button>
@@ -293,6 +308,46 @@
         <div  data-role="dialog" id="dialog9" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px">
             <h3 align="center" class="text-light">Fetching code</h3>
             <div style="width: 400px;color:  transparent" data-role="preloader" data-type="metro" data-style="color"></div>
+        </div>
+
+        <div  class="bg-grayLighter bordered border" data-role="dialog" id="createNewFile_dialog"  >
+
+            <div style="padding-bottom: 10px; padding-top: 30px; padding-left: 30px;padding-right: 30px; border-style: solid;border-color: #999999;border-width: 1px">
+                <table border="0">
+                    <tr >
+                        <td width="70px">
+                            <label>Directory </label>
+                        </td>
+                        <td>
+                            <div class="input-control select" style="margin: 0;padding: 0">
+                                <select>
+                                    <option>/</option>
+                                    <option>/lib</option>
+                                    <option>/make</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>
+                            <label class="">Name</label>            
+                        </td>
+                        <td>
+                            <div class="input-control text" >
+                                <input type="text" placeholder="File name">
+                            </div>            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td align="right">
+                            <button class="button fg-white" style="background-color: #4679e4">Create</button>
+                        </td>
+                    </tr>
+                </table>
+
+                <br>
+            </div>
         </div>
     </body>
 </html>
