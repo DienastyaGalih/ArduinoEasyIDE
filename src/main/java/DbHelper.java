@@ -280,6 +280,51 @@ public class DbHelper {
 
     }
 
+    private void createFilerFolderDefault(Handler<String> handler) {
+        System.out.println("make make asdf");
+//        String query= "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
+//                + "VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
+        String query = 
+                "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
+                + "	VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
+
+        mySQLClient.getConnection(resConnection -> {
+            if (resConnection.succeeded()) {
+                SQLConnection connection;
+                connection = resConnection.result();
+                connection.setAutoCommit(true, autoCommit -> {
+                    if (autoCommit.succeeded()) {
+
+                        connection.query(query, handlerQuery -> {
+                            if (handlerQuery.succeeded()) {
+
+                                ResultSet resultSet = handlerQuery.result();
+                                System.out.println(resultSet.toJson().toString() + " bener katanya");
+                                handler.handle(resultSet.toJson().toString());
+//                                handler.handle(resultSet.toJson());
+
+                            } else {
+
+                                System.out.println(handlerQuery.cause());
+                                System.out.println("failed ---");
+                            }
+                            connection.close();
+                        });
+                    } else {
+                        System.out.println("auto commit failed ---");
+                    }
+
+                });
+
+                // Got a connection
+            } else {
+                // Failed to get connection - deal with it
+                System.out.println("true failes");
+            }
+        });
+
+    }
+
     public void createProject(String username, String projectName, String detail, String visibility, String createdDate, String modifyDate, String boardType, String icType, Handler<JsonObject> handler) {
         String query = "INSERT INTO arduinoeasydb.project (`USER_2_user_name`, `name`, detail, visibility, cretate_date, modify_date, board_type, ic_type) "
                 + "VALUES ('" + username + "', '" + projectName + "', '" + detail + "', '" + visibility + "', '" + createdDate + "', '" + modifyDate + "', '" + boardType + "', '" + icType + "')";
@@ -295,7 +340,10 @@ public class DbHelper {
                             if (handlerQuery.succeeded()) {
 
                                 ResultSet resultSet = handlerQuery.result();
-                                handler.handle(resultSet.toJson());
+                                createFilerFolderDefault(handle -> {
+                                    handler.handle(new JsonObject(handle));
+                                });
+//                                handler.handle(resultSet.toJson());
 
                             } else {
 
@@ -351,14 +399,10 @@ public class DbHelper {
 //                                System.out.println(new JsonArray(list).toString());
                                 for (JsonObject listFile : listFiles) {
                                     int folderId = listFile.getInteger("folderId");
-                                    
+
 //                                    System.out.println("id folder " + folderId);
-
-                                    
-
                                     for (JsonObject listFolder : listFolders) {
-                                        
-                                        
+
                                         if (listFolder.getInteger("id") == folderId) {
                                             try {
                                                 listFolder.getJsonArray("files").add(listFile);
@@ -369,11 +413,10 @@ public class DbHelper {
                                             }
 
                                         }
-                                        
+
                                     }
                                 }
 
-                                
 //                                System.out.println(new JsonArray(listFolders).toString());
                                 handler.handle(new JsonArray(listFolders));
                             } else {
@@ -428,9 +471,9 @@ public class DbHelper {
 
                                 getProjectStructure(projectId, handler -> {
                                     System.out.println("finisssss--------------------");
-                                    JsonObject folders=new JsonObject();
+                                    JsonObject folders = new JsonObject();
                                     folders.put("folders", handler);
-                                    project.put("sourceCode",folders );
+                                    project.put("sourceCode", folders);
 //                                    project.put("files", new JsonArray().add(handler.getJsonObject(0).getJsonArray("files").getJsonObject(0)));
 //                                    System.out.println(project.toString());
                                     handlerRequest.handle(project);

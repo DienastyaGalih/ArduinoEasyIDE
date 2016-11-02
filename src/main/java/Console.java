@@ -70,27 +70,10 @@ public class Console extends AbstractVerticle {
 
     private void handleOpenProject(RoutingContext routingContext) {
         String projectId = routingContext.request().getParam("projectId");
-       
-        
         DbHelper.getInstance().getProject(projectId, handles -> {
             HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "application/json").end(handles.toString());
         });
-//        DbHelper.getInstance().getProjectStructure(14+"");
-
-//        System.out.println("projectId " + projectName);
-//        HttpServerResponse response = routingContext.response();
-//        if (projectName == null) {
-//            sendError(400, response);
-//        } else {
-//            JsonObject project = DbHelper.getInstance().openProject("", projectName);
-//            System.out.println(project.toString());
-//            if (project == null) {
-//                sendError(404, response);
-//            } else {
-//        response.putHeader("content-type", "application/json").end(new JsonObject().put("finish", "fin").toString());
-//            }
-//        }
     }
 
     private void handleLoadFile(RoutingContext routingContext) {
@@ -132,7 +115,7 @@ public class Console extends AbstractVerticle {
                     project.getString("board"),
                     project.getString("ic"),
                     handler -> {
-
+                        System.out.println(handler.toString());
                         routingContext.response().end(new JsonObject().put("makan", "finish").toString());
 
                     });

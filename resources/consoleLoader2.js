@@ -12,7 +12,7 @@ var countingTabArrayId = 0;
 
 $(document).ready(function () {
 //    console.log("document loaded");
-    var jqxhr = $.get("http://localhost:8080/project/openProject/14", function (data) {
+    var jqxhr = $.get("http://localhost:8080/project/openProject/15", function (data) {
 
         project = data;
         $("#projectName").text("~" + project.name);
@@ -120,7 +120,7 @@ function updateProjectStructure(project) {
     var foldersText = "";
     alert("makan");
     alert(project.folders.length);
-    for (var p = 0; p < project.folders.length-1; p++) {
+    for (var p = 0; p < project.folders.length; p++) {
         filesText += addFolder(project.folders[p]);
     }
 //    for (var i = 0; i < project.files.length; i++) {
