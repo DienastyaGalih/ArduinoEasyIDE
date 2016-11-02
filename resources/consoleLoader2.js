@@ -12,7 +12,7 @@ var countingTabArrayId = 0;
 
 $(document).ready(function () {
 //    console.log("document loaded");
-    var jqxhr = $.get("http://localhost:8080/project/openProject/15", function (data) {
+    var jqxhr = $.get("http://localhost:8080/project/openProject/galih1994_679cfedbe131466b90c06566ee548e07", function (data) {
 
         project = data;
         $("#projectName").text("~" + project.name);
@@ -123,9 +123,9 @@ function updateProjectStructure(project) {
     for (var p = 0; p < project.folders.length; p++) {
         filesText += addFolder(project.folders[p]);
     }
-//    for (var i = 0; i < project.files.length; i++) {
-//        filesText += addFile(project.files[i]);
-//    }
+    for (var i = 0; i < project.files.length; i++) {
+        filesText += addFile(project.files[i]);
+    }
     $("#projectBar").append(filesText);
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
@@ -243,7 +243,7 @@ function getListAllProject() {
 
             var projectName = data[p].name;
             var dateModified = data[p].date;
-            var idProjectInListOpen = data[p].id + "_list"
+            var idProjectInListOpen =data[p].id+"-list" ;
             var id = data[p].id + "";
             alert("tambah incere " + idProjectInListOpen);
             var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
@@ -256,7 +256,7 @@ function getListAllProject() {
             $("#panelListOfProject").append(list);
 
             $("#" + idProjectInListOpen).dblclick(function (event) {
-                reloadProject(this.id.split('_')[0]);
+                reloadProject(this.id.split('-')[0]);
             });
 
         }

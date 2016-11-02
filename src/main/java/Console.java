@@ -20,6 +20,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class Console extends AbstractVerticle {
 
@@ -30,14 +31,14 @@ public class Console extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer();
 
         Router router = Router.router(vertx);
-        router.route("/static/*").handler(StaticHandler.
-                create()
-                .setWebRoot("C:/Users/User/Documents/bekUP/ArduinoOnlineIDE/resources")
-                .setCachingEnabled(false)
-                .setAllowRootFileSystemAccess(true)
-                .setDirectoryListing(true)
-                .setMaxAgeSeconds(1000)
-        );
+//        router.route("/static/*").handler(StaticHandler.
+//                create()
+//                .setWebRoot("C:/Users/User/Documents/bekUP/ArduinoOnlineIDE/resources")
+//                .setCachingEnabled(false)
+//                .setAllowRootFileSystemAccess(true)
+//                .setDirectoryListing(true)
+//                .setMaxAgeSeconds(1000)
+//        );
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
@@ -45,6 +46,11 @@ public class Console extends AbstractVerticle {
                 .allowedHeader("X-PINGARUNER")
                 .allowedHeader("Content-Type"));
 
+        
+        DbHelper.getInstance().init(vertx);
+        FileAccess.getInstance().init(vertx);
+
+        
         router.get("/project/openProject/:projectId").handler(this::handleOpenProject);
         router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
 
@@ -58,9 +64,7 @@ public class Console extends AbstractVerticle {
         router.get("/project/createFolder/:folderId/:nameFile").handler(this::testing);
 
         server.requestHandler(router::accept).listen(8080);
-        vertx.deployVerticle(new RestAPI());
-
-        DbHelper.getInstance().init(vertx);
+        
 
     }
 
@@ -71,10 +75,23 @@ public class Console extends AbstractVerticle {
     private void handleOpenProject(RoutingContext routingContext) {
         String projectId = routingContext.request().getParam("projectId");
         DbHelper.getInstance().getProject(projectId, handles -> {
+            
+            handles.put("sourceCode", FileAccess.getInstance().getProjectStructure(projectId));
             HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "application/json").end(handles.toString());
         });
     }
+    
+//    private void handleOpenProject(RoutingContext routingContext) {
+////        String projectId = routingContext.request().getParam("projectId");
+//        String projectId = "galih1994_679cfedbe131466b90c06566ee548e07";
+//        DbHelper.getInstance().getProjectByFile(projectId, handles -> {
+//
+//            FileAccess.getInstance().getProjectStructure(projectId);
+//            HttpServerResponse response = routingContext.response();
+//            response.putHeader("content-type", "application/json").end(handles.toString());
+//        });
+//    }
 
     private void handleLoadFile(RoutingContext routingContext) {
         String fileId = routingContext.request().getParam("fileId");
@@ -106,7 +123,9 @@ public class Console extends AbstractVerticle {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = new Date();
 
+            String projectId = username + "_" + UUID.randomUUID().toString().replace("-", "");
             DbHelper.getInstance().createProject(this.username,
+                    projectId,
                     project.getString("name"),
                     project.getString("detail"),
                     project.getString("visibility"),
@@ -115,9 +134,16 @@ public class Console extends AbstractVerticle {
                     project.getString("board"),
                     project.getString("ic"),
                     handler -> {
-                        System.out.println(handler.toString());
-                        routingContext.response().end(new JsonObject().put("makan", "finish").toString());
-
+                        FileAccess.getInstance().createFolder(projectId, "", resultWrite -> {
+                            if (resultWrite) {
+                                FileAccess.getInstance().writeFile(projectId, "main.ino", "example", resultWriteText -> {
+                                    routingContext.response().end(new JsonObject().put("result", resultWriteText).toString());
+                                });
+                            } else {
+                                routingContext.response().end(new JsonObject().put("result", resultWrite).toString());
+                            }
+//                            routingContext.response().end(new JsonObject().put("result", resultWrite).toString());
+                        });
                     });
 
         });

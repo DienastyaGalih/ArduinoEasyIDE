@@ -12,6 +12,7 @@ import io.vertx.ext.sql.SQLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,7 +42,7 @@ public class DbHelper {
                 .put("maxPoolSize", 1000)
                 .put("username", "admin")
                 .put("password", "212")
-                .put("database", "arduinoeasydb")
+                .put("database", "easy_arduino")
                 .put("queryTimeout", 7000);
         this.mySQLClient = MySQLClient.createShared(vertx, mysqlConfig);
         mySQLClient.getConnection(conHandler -> {
@@ -284,8 +285,8 @@ public class DbHelper {
         System.out.println("make make asdf");
 //        String query= "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
 //                + "VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
-        String query = 
-                "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
+        String query
+                = "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
                 + "	VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
 
         mySQLClient.getConnection(resConnection -> {
@@ -325,10 +326,13 @@ public class DbHelper {
 
     }
 
-    public void createProject(String username, String projectName, String detail, String visibility, String createdDate, String modifyDate, String boardType, String icType, Handler<JsonObject> handler) {
-        String query = "INSERT INTO arduinoeasydb.project (`USER_2_user_name`, `name`, detail, visibility, cretate_date, modify_date, board_type, ic_type) "
-                + "VALUES ('" + username + "', '" + projectName + "', '" + detail + "', '" + visibility + "', '" + createdDate + "', '" + modifyDate + "', '" + boardType + "', '" + icType + "')";
+    public void createProject(String projectId,String username, String projectName, String detail, String visibility, String createdDate, String modifyDate, String boardType, String icType, Handler<JsonObject> handler) {
+        
+        String query = "INSERT INTO `project`(`pk_id_project`, `USER_2_user_name`, `name`, `detail`, `accessbility`, `cretate_date`, `modify_date`, `board_type`, `ic_type`, `soft_delete`) VALUES"
+                + " ('" + username + "','" + projectId + "','" + projectName + "','" + detail + "','" + visibility + "','" + createdDate + "','" + modifyDate + "','" + boardType + "','" + icType + "','f')";
 
+        
+        System.out.println("\n\n"+query+"\n\n");
         mySQLClient.getConnection(resConnection -> {
             if (resConnection.succeeded()) {
                 SQLConnection connection;
@@ -340,14 +344,11 @@ public class DbHelper {
                             if (handlerQuery.succeeded()) {
 
                                 ResultSet resultSet = handlerQuery.result();
-                                createFilerFolderDefault(handle -> {
-                                    handler.handle(new JsonObject(handle));
-                                });
-//                                handler.handle(resultSet.toJson());
+                                handler.handle(resultSet.toJson());
 
                             } else {
 
-                                System.out.println("failed");
+                                System.out.println("failed "+handlerQuery.cause().toString());
                             }
                             connection.close();
                         });
@@ -421,7 +422,7 @@ public class DbHelper {
                                 handler.handle(new JsonArray(listFolders));
                             } else {
 
-                                System.out.println("failed");
+                                System.out.println("failed "+handlerQuery.cause());
                             }
                             connection.close();
                         });
@@ -438,9 +439,15 @@ public class DbHelper {
             }
         });
     }
+    
+    
+    public  void getProjectByFile(String projectId, Handler<JsonObject> handlerRequest) {
+        handlerRequest.handle(new JsonObject().put("m", "m"));
+    }
 
     public void getProject(String projectId, Handler<JsonObject> handlerRequest) {
-        String queryFolder = "SELECT pk_id_project as id, name , detail, board_type as arduinoType, ic_type as icType, visibility as acessbility FROM project WHERE project.pk_id_project =" + projectId + ";";
+        String queryFolder = "SELECT pk_id_project as id, name , detail, board_type as arduinoType, ic_type as icType, accessbility FROM project WHERE project.pk_id_project ='" + projectId + "';";
+        System.out.println(queryFolder);
         mySQLClient.getConnection(resConnection -> {
             if (resConnection.succeeded()) {
                 SQLConnection connection;
@@ -452,12 +459,9 @@ public class DbHelper {
                             if (handlerQuery.succeeded()) {
 
                                 ResultSet resultSet = handlerQuery.result();
-//                                System.out.println(resultSet.toJson());
                                 JsonObject resultJSON = resultSet.getRows().get(0);
-//                                System.out.println("----------------------");
-//                                System.out.println(resultJSON.toString());
                                 JsonObject project = new JsonObject();
-                                project.put("id", resultJSON.getInteger("id"));
+                                project.put("id", resultJSON.getString("id"));
                                 project.put("name", resultJSON.getString("name"));
                                 project.put("detail", resultJSON.getString("detail"));
 
@@ -469,19 +473,20 @@ public class DbHelper {
                                 configProject.put("port", "com3");
                                 project.put("config", configProject);
 
-                                getProjectStructure(projectId, handler -> {
-                                    System.out.println("finisssss--------------------");
-                                    JsonObject folders = new JsonObject();
-                                    folders.put("folders", handler);
-                                    project.put("sourceCode", folders);
-//                                    project.put("files", new JsonArray().add(handler.getJsonObject(0).getJsonArray("files").getJsonObject(0)));
-//                                    System.out.println(project.toString());
-                                    handlerRequest.handle(project);
-                                });
+                                handlerRequest.handle(project);
+//                                getProjectStructure(projectId, handler -> {
+//                                    System.out.println("finisssss--------------------");
+//                                    JsonObject folders = new JsonObject();
+//                                    folders.put("folders", handler);
+//                                    project.put("sourceCode", folders);
+////                                    project.put("files", new JsonArray().add(handler.getJsonObject(0).getJsonArray("files").getJsonObject(0)));
+////                                    System.out.println(project.toString());
+//                                    handlerRequest.handle(project);
+//                                });
 
                             } else {
 
-                                System.out.println("failed");
+                                System.out.println("failed "+handlerQuery.cause());
                             }
                             connection.close();
                         });

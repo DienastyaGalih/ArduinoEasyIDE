@@ -1,45 +1,8 @@
-[
-    {
-        "id": 1,
-        "name": "lib",
-        "dateCreated": "2016-10-31T21:26:13.000",
-        "dateModified": "2016-10-31T21:26:14.000",
-        "files": [
-            {
-                "name": "test.ino",
-                "dateCreated": "2016-10-31T21:28:23.000",
-                "dateModified": "2016-10-31T21:28:23.000",
-                "id": 1,
-                "folderId": 1
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "name": "src",
-        "dateCreated": "2016-10-31T21:52:56.000",
-        "dateModified": "2016-10-31T21:52:56.000",
-        "files": [
-            {
-                "name": "fileFolder2 A",
-                "dateCreated": "2016-11-01T05:21:47.000",
-                "dateModified": "2016-11-01T05:21:49.000",
-                "id": 2,
-                "folderId": 2
-            },
-            {
-                "name": "fileFolder 2 B",
-                "dateCreated": "2016-11-01T05:53:50.000",
-                "dateModified": "2016-11-01T05:53:51.000",
-                "id": 4,
-                "folderId": 2
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "name": "default",
-        "dateCreated": "2016-10-31T21:53:06.000",
-        "dateModified": "2016-10-31T21:53:07.000"
-    }
-]
+INSERT INTO `project`(`pk_id_project`, `USER_2_user_name`, `name`, `detail`, `accessbility`, `cretate_date`, `modify_date`, `board_type`, `ic_type`, `soft_delete`) VALUES ('galih1994','galih1994_754564eb26b24c319164d76df3d1b085','kj','kjh','Private','2016-11-02 09:00:30','2016-11-02 09:00:30','Arduino Uno','Atmega 32p 5v','f')
+
+
+
+INSERT INTO `project`(`pk_id_project`, `USER_2_user_name`, `name`, `detail`, `accessbility
+`, `cretate_date`, `modify_date`, `board_type`, `ic_type`, `soft_delete`) VALUES ('galih19
+94','galih1994_754564eb26b24c319164d76df3d1b085','kj','kjh','Private','2016-11-02 09:00:30
+','2016-11-02 09:00:30','Arduino Uno','Atmega 32p 5v','f')
