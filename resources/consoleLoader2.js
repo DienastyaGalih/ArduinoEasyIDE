@@ -6,12 +6,14 @@
 
 var project;
 var tabFileArrayID = [];
-var tabActive = 0;
+var tabActive = "";
 var countingTabArrayId = 0;
-//var tabProjectActive = new tabProject();
 
-$(document).ready(function () {
-//    console.log("document loaded");
+var countingTabSaved = 0;
+
+
+
+function openProject() {
     var jqxhr = $.get("http://localhost:8080/project/openProject/galih1994_679cfedbe131466b90c06566ee548e07", function (data) {
 
         project = data;
@@ -26,25 +28,51 @@ $(document).ready(function () {
     }).always(function () {
         alert("finished");
     });
-    $("#saveProject").click(function () {
-// Send the data using post
+}
 
-        alert("saving " + tabFileArrayID[0]);
-        var $f = $('#codeSource_' + tabFileArrayID[0]);
-        var data = $f.get(0).contentWindow.getValueEditor();
-        alert(data + " data source");
-        $.ajax({
-            url: 'http://localhost:8080/project/saveFile/' + tabFileArrayID[0],
-            type: "POST",
-            processData: false,
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            success: function (message) {
-                // Do something with response
-                alert(message.makan);
-            }
-        });
+$(document).ready(function () {
+
+    openProject();
+
+    $("#saveProject").click(function () {
+        // Send the data using post
+
+        if (countingTabSaved < countingTabArrayId) {
+
+            $("#completedSaveCounting").text('Completed ' + countingTabSaved + ' of ' + countingTabArrayId);
+//        var cleanBase32=tabFileArrayID[countingTabSaved].replace("0","=");
+            var cleanBase32 = tabFileArrayID[countingTabSaved].replace(new RegExp("0", 'g'), "=");
+            alert(cleanBase32);
+            var decodeId = Base32Decode(cleanBase32);
+            $("#progressSaveFileName").text('~ ' + decodeId);
+            $("#saveProjectProgress").data('dialog').open();
+            alert("saving " + tabFileArrayID[countingTabSaved]);
+            var $f = $('#codeSource-' + tabFileArrayID[countingTabSaved]);
+            var data = $f.get(0).contentWindow.getValueEditor();
+            alert(data + " data source");
+            $.ajax({
+                url: 'http://localhost:8080/project/saveFile/' + project.id + "/" + tabFileArrayID[countingTabSaved],
+                type: "POST",
+                processData: false,
+                data: data,
+                contentType: "application/json",
+                success: function (message) {
+                    // Do something with response
+                    alert(message.result + " respond save");
+                    countingTabSaved++;
+                    $("#saveProject").click();
+                    var pb = $("#pb1").data('progress');
+                    pb.set((countingTabSaved / countingTabArrayId) * 100);
+                }
+            });
+        } else {
+            countingTabSaved = 0;
+            $("#saveProjectProgress").data('dialog').close();
+            var pb = $("#pb1").data('progress');
+            pb.set(0);
+        }
     });
+
 
 
 
@@ -115,7 +143,7 @@ $(window).load(function () {
  */
 function updateProjectStructure(project) {
     //render file project
-
+    $("#projectBar").empty();
     var filesText = "";
     var foldersText = "";
     alert("makan");
@@ -126,12 +154,13 @@ function updateProjectStructure(project) {
     for (var i = 0; i < project.files.length; i++) {
         filesText += addFile(project.files[i]);
     }
+    
     $("#projectBar").append(filesText);
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
             tabActive = event.target.id;
-            alert(event.target.id);
-            $("#dialog9").data('dialog').open();
+
+
             addTabFile(event.target.id)
 
         });
@@ -139,29 +168,49 @@ function updateProjectStructure(project) {
 }
 
 
+
 function addTabFile(idFIle) {
 
 
-    var tmp = idFIle.split('_', 3);
+    var tmp = idFIle.split('-', 3);
     idFIle = tmp[1];
     var fileName = tmp[2];
-    tabFileArrayID[countingTabArrayId++] = idFIle;
-//    var tabFileId = 'frame_' + idFIle.replace(".", "").replace("/", "");
 
-    var tabFileId = "fileTab_" + idFIle;
-    var sourceFileId = "fileSource_" + idFIle;
-    var codeFileId = "codeSource_" + idFIle;
-    $("#tabCode").append('<li class="tabPanel" id="' + tabFileId + '" ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span id="' + tabFileId + '" style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+    for (var p = 0; p < tabFileArrayID.length; p++) {
+        if (tabFileArrayID[p] == idFIle) {
+            $("#fileTab-" + idFIle).click();
+
+            return;
+        }
+    }
+
+    $("#dialog9").data('dialog').open();
+    tabFileArrayID[countingTabArrayId++] = idFIle;
+    var tabFileId = "fileTab-" + idFIle;
+    var sourceFileId = "fileSource-" + idFIle;
+    var codeFileId = "codeSource-" + idFIle;
+//    $("#tabCode").append('<li class="tabPanel" id="' + tabFileId + '" ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span id="' + tabFileId + '" style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+    $("#tabCode").append('<li class="tabPanel"  ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span  style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
     var sourcePane = '<div class="frame" id="' + sourceFileId + '" style="margin-top: 0px;padding: 0px">' +
             '<iframe id="' + codeFileId + '"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>' +
             '</div>';
     $("#tabSource").append(sourcePane);
-    $("#dialog9").data('dialog').close();
+
+
+
     $(document).ready(function () {
         $(".tabPanel").click(function (event) {
+//            alert("klikable " + codeFileId);
             requestCodeSource(codeFileId);
         });
+
+        //to give listener to click tab
+        window.setTimeout(function () {
+            $("#fileTab-" + idFIle).click();
+        }, 500);
     });
+
+
 }
 
 function closeTab(idFile) {
@@ -175,19 +224,23 @@ function closeTab(idFile) {
  */
 function requestCodeSource(codeFileId) {
 
+//    alert(codeFileId+" code file ID");
     var $f = $('#' + codeFileId);
     if ($f.get(0).contentWindow.getValueEditor() != 'null') {
         return;
     }
-    var makeUI = $.get("http://localhost:8080/project/loadFile/namaFIle" + codeFileId, function (data) {
+
+    var cleanId = codeFileId.split("-")[1];
+    var makeUI = $.get("http://localhost:8080/project/loadFile/" + project.id + "/" + cleanId, function (data) {
         var $f = $('#' + codeFileId);
         $f.get(0).contentWindow.setValueEditor(data);
+        $("#dialog9").data('dialog').close();
     }).done(function () {
-        alert("second success ");
+//        alert("second success ");
     }).fail(function (data) {
         alert("error " + data);
     }).always(function () {
-        alert("finished");
+//        alert("finished");
     });
 }
 
@@ -196,7 +249,7 @@ function addFolder(folder) {
 //find folder
     var filesText = "";
     for (var p = 0; p < folder.files.length; p++) {
-        
+
         filesText += addSubFile(folder.files[p], folder.name);
     }
     alert(filesText);
@@ -205,11 +258,11 @@ function addFolder(folder) {
 
 
 function addSubFile(file, folderName) {
-    return '<li class="fileNode" id="fileBar_' + file.id + '_' + file.name + '" ><span id="fileBar_' + file.id + '_' + file.name + '" class="leaf"><span id="fileBar_' + file.id + '_' + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
 }
 
 function addFile(file) {
-    return '<li class="fileNode" id="fileBar_' + file.id + '_' + file.name + '" ><span id="fileBar_' + file.id + '_' + file.name + '" class="leaf"><span id="fileBar_' + file.id + '_' + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
 }
 
 
@@ -228,6 +281,22 @@ function getFileSourceFromEditor() {
 
 function reloadProject(idProject) {
     alert('reload project ' + idProject);
+    var jqxhr = $.get("http://localhost:8080/project/openProject/"+idProject, function (data) {
+        alert('respond '+idProject);
+        project = data;
+        $("#projectName").text("~" + project.name);
+        $("#arduinoType").text(project.config.arduinoType);
+        $("#arduinoIC").text(project.config.icType);
+        updateProjectStructure(project.sourceCode);
+        var charm = $("#menu-special").data("charm");
+        charm.close();
+    }).done(function () {
+        alert("second success ");
+    }).fail(function (detail) {
+        alert("error " + detail);
+    }).always(function () {
+        alert("finished");
+    });
 }
 
 
@@ -243,7 +312,7 @@ function getListAllProject() {
 
             var projectName = data[p].name;
             var dateModified = data[p].date;
-            var idProjectInListOpen =data[p].id+"-list" ;
+            var idProjectInListOpen = data[p].id + "-list";
             var id = data[p].id + "";
             alert("tambah incere " + idProjectInListOpen);
             var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
@@ -258,15 +327,14 @@ function getListAllProject() {
             $("#" + idProjectInListOpen).dblclick(function (event) {
                 reloadProject(this.id.split('-')[0]);
             });
-
         }
 
     }).done(function () {
-        alert("second success ");
+//        alert("second success ");
     }).fail(function (data) {
-        alert("error " + data);
+//        alert("error " + data);
     }).always(function () {
-        alert("finished");
+//        alert("finished");
     });
 
 
@@ -274,3 +342,7 @@ function getListAllProject() {
 
 }
 
+function Base32Decode(s) {
+
+    return s;
+}

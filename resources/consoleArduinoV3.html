@@ -310,6 +310,54 @@
             <div style="width: 400px;color:  transparent" data-role="preloader" data-type="metro" data-style="color"></div>
         </div>
 
+
+        <div  data-role="dialog" id="saveProjectProgress" class="padding20 active"  data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 25px; background-color: #ffffff ">
+
+
+            <table border="0" width="400px" >
+                <tr>
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>
+                                <div class="progress large" id="pb1" data-role="progress" data-value="0"  style="width: 400px; margin:  0;" ></div>
+                                </td>
+                                <td>
+                                 <span style="margin-left: 5px" class="icon mif-cancel"></span>            
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="completedSaveCounting" class="text-light border">
+                            Completed 3 of 4
+                        </div>
+                    </td>
+                    <td  class="text-light border" align="right">
+                        <div id="progressSaveFileName">~Saving makan.c</div>
+                    </td>
+                </tr>
+            </table>
+
+            <script>
+                var interval1;
+                function runPB1() {
+                    clearInterval(interval1);
+                    var pb = $("#pb1").data('progress');
+                    var val = 0;
+                     pb.set(5);
+//                     $('#sct-1').html("3/5 Complete (Saving : makan.c)");
+
+                }
+
+            </script>
+
+        </div>
+
         <div  class="bg-grayLighter bordered border" data-role="dialog" id="createNewFile_dialog"  >
 
             <div style="padding-bottom: 10px; padding-top: 30px; padding-left: 30px;padding-right: 30px; border-style: solid;border-color: #999999;border-width: 1px">

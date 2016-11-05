@@ -21,6 +21,7 @@ import io.vertx.ext.web.handler.StaticHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import org.apache.commons.codec.binary.Base32;
 
 public class Console extends AbstractVerticle {
 
@@ -46,16 +47,14 @@ public class Console extends AbstractVerticle {
                 .allowedHeader("X-PINGARUNER")
                 .allowedHeader("Content-Type"));
 
-        
         DbHelper.getInstance().init(vertx);
         FileAccess.getInstance().init(vertx);
 
-        
         router.get("/project/openProject/:projectId").handler(this::handleOpenProject);
-        router.get("/project/loadFile/:fileId").handler(this::handleLoadFile);
+        router.get("/project/loadFile/:projectId/:fileId").handler(this::handleLoadFile);
 
         router.post("/project/create").handler(this::handleCreateProject);
-        router.post("/project/saveFile/:fileId").handler(this::handleSaveFile);
+        router.post("/project/saveFile/:projectId/:fileId").handler(this::handleSaveFile);
         router.get("/project/getListProject").handler(this::handleGetListProject);
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
@@ -64,7 +63,6 @@ public class Console extends AbstractVerticle {
         router.get("/project/createFolder/:folderId/:nameFile").handler(this::testing);
 
         server.requestHandler(router::accept).listen(8080);
-        
 
     }
 
@@ -75,32 +73,26 @@ public class Console extends AbstractVerticle {
     private void handleOpenProject(RoutingContext routingContext) {
         String projectId = routingContext.request().getParam("projectId");
         DbHelper.getInstance().getProject(projectId, handles -> {
-            
+
             handles.put("sourceCode", FileAccess.getInstance().getProjectStructure(projectId));
             HttpServerResponse response = routingContext.response();
             response.putHeader("content-type", "application/json").end(handles.toString());
         });
     }
-    
-//    private void handleOpenProject(RoutingContext routingContext) {
-////        String projectId = routingContext.request().getParam("projectId");
-//        String projectId = "galih1994_679cfedbe131466b90c06566ee548e07";
-//        DbHelper.getInstance().getProjectByFile(projectId, handles -> {
-//
-//            FileAccess.getInstance().getProjectStructure(projectId);
-//            HttpServerResponse response = routingContext.response();
-//            response.putHeader("content-type", "application/json").end(handles.toString());
-//        });
-//    }
 
     private void handleLoadFile(RoutingContext routingContext) {
+        String projectId = routingContext.request().getParam("projectId");
+        System.out.println("project name " + projectId);
         String fileId = routingContext.request().getParam("fileId");
-        System.out.println("project name " + fileId);
+        System.out.println("Before " + fileId);
+        fileId = new String(new Base32().decode(fileId.replace("0", "=")));
+        System.out.println("file name " + fileId);
         HttpServerResponse response = routingContext.response();
         if (fileId == null) {
             sendError(400, response);
         } else {
-            String fileSource = DbHelper.getInstance().getFileSource("", fileId);
+
+            String fileSource = FileAccess.getInstance().getFileSource("", projectId, fileId);
             System.out.println(fileSource.toString());
             if (fileSource == null) {
                 sendError(404, response);
@@ -152,16 +144,44 @@ public class Console extends AbstractVerticle {
 
     private void handleSaveFile(RoutingContext routingContext) {
 
-        String idFile = routingContext.request().getParam("fileId");
+//        routingContext.request().handler(hndlr->{
+//            String projectId = routingContext.request().getParam("projectId");
+//            System.out.println("project name " + projectId);
+//            String fileId = routingContext.request().getParam("fileId");
+//            fileId = new String(new Base32().decode(fileId.replace("0", "=")));
+//            System.out.println("file name " + fileId);
+//
+//            System.out.println("source " + new String(hndlr.getBytes()));
+//
+//            HttpServerResponse response = routingContext.response();
+//
+//            FileAccess.getInstance().
+//                    saveFile(hndlr.toString(), projectId, fileId, handlerr -> {
+//                        routingContext.response().
+//                                end(new JsonObject().
+//                                        put("result", handlerr).toString());
+//                    });
+//
+//        });
         routingContext.response().putHeader("content-type", "application/json");
-
-        routingContext.response().setChunked(true);
-
         routingContext.request().bodyHandler(hndlr -> {
-            System.out.println("File id : " + idFile);
-            System.out.println("request : " + new String(hndlr.getBytes()));
+            String projectId = routingContext.request().getParam("projectId");
+            System.out.println("project name " + projectId);
+            String fileId = routingContext.request().getParam("fileId");
+            fileId = new String(new Base32().decode(fileId.replace("0", "=")));
+            System.out.println("file name " + fileId);
 
-            routingContext.response().end(new JsonObject().put("makan", "finish").put("id", idFile).toString());
+            System.out.println("source " + new String(hndlr.getBytes()));
+
+            HttpServerResponse response = routingContext.response();
+
+            FileAccess.getInstance().
+                    saveFile(hndlr.toString(), projectId, fileId, handlerr -> {
+                        routingContext.response().
+                                end(new JsonObject().
+                                        put("result", handlerr).toString());
+                    });
+
         });
 
     }
