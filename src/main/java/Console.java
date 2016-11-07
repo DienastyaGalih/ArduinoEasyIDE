@@ -59,11 +59,44 @@ public class Console extends AbstractVerticle {
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
 
-        router.get("/project/createFile/:folderId/:nameFile").handler(this::testing);
-        router.get("/project/createFolder/:folderId/:nameFile").handler(this::testing);
+        router.get("/project/createFile/:projectId/:directory/:fileName").handler(this::handleCreateFile);
+        router.get("/project/createFolder/:projectId/:directory/:folderName").handler(this::handleCreateFolder);
 
         server.requestHandler(router::accept).listen(8080);
 
+    }
+
+    private void handleCreateFolder(RoutingContext routingContext) {
+        String projectId = routingContext.request().getParam("projectId");
+//        String directoryName = routingContext.request().getParam("directory");
+        String folderName = routingContext.request().getParam("folderName");
+
+        System.out.println("Create file " + projectId + " " + folderName);
+        FileAccess.getInstance().createFolder(projectId, folderName, hand -> {
+            HttpServerResponse response = routingContext.response();
+            response.putHeader("content-type", "application/json").
+                    end(new JsonObject().
+                            put("result", hand).
+                            toString());
+
+        });
+    }
+
+    private void handleCreateFile(RoutingContext routingContext) {
+        String projectId = routingContext.request().getParam("projectId");
+        String directory = routingContext.request().getParam("directory");
+        String fileName = routingContext.request().getParam("fileName");
+
+        System.out.println("Create file " + projectId + " " + directory + " " + fileName);
+        FileAccess.getInstance().createFile(projectId, directory, fileName, hand -> {
+
+            HttpServerResponse response = routingContext.response();
+            response.putHeader("content-type", "application/json").
+                    end(new JsonObject().
+                            put("result", hand).
+                            toString());
+
+        });
     }
 
     private void sendError(int statusCode, HttpServerResponse response) {
@@ -129,12 +162,11 @@ public class Console extends AbstractVerticle {
                         FileAccess.getInstance().createFolder(projectId, "", resultWrite -> {
                             if (resultWrite) {
                                 FileAccess.getInstance().writeFile(projectId, "main.ino", "example", resultWriteText -> {
-                                    routingContext.response().end(new JsonObject().put("result", resultWriteText).toString());
+                                    routingContext.response().end(new JsonObject().put("result", resultWriteText).put("projectId", projectId).toString());
                                 });
                             } else {
                                 routingContext.response().end(new JsonObject().put("result", resultWrite).toString());
                             }
-//                            routingContext.response().end(new JsonObject().put("result", resultWrite).toString());
                         });
                     });
 

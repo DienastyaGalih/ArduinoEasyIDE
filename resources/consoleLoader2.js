@@ -11,7 +11,22 @@ var countingTabArrayId = 0;
 
 var countingTabSaved = 0;
 
+function openProjectById(idProject) {
+    var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
 
+        project = data;
+        $("#projectName").text("~" + project.name);
+        $("#arduinoType").text(project.config.arduinoType);
+        $("#arduinoIC").text(project.config.icType);
+        updateProjectStructure(project.sourceCode);
+    }).done(function () {
+        alert("second success ");
+    }).fail(function (detail) {
+        alert("error " + detail);
+    }).always(function () {
+        alert("finished");
+    });
+}
 
 function openProject() {
     var jqxhr = $.get("http://localhost:8080/project/openProject/galih1994_679cfedbe131466b90c06566ee548e07", function (data) {
@@ -21,6 +36,64 @@ function openProject() {
         $("#arduinoType").text(project.config.arduinoType);
         $("#arduinoIC").text(project.config.icType);
         updateProjectStructure(project.sourceCode);
+    }).done(function () {
+        alert("second success ");
+    }).fail(function (detail) {
+        alert("error " + detail);
+    }).always(function () {
+        alert("finished");
+    });
+}
+
+function createFile() {
+    var dialog = $("#createNewFile_dialog").data('dialog');
+    dialog.close();
+    $("#dialog9").data('dialog').open();
+    var dirPath = $("#createNewFile_inputDirectory").val();
+    var fileName = $("#createNewFile_inputFileName").val();
+
+    alert(dirPath + " " + fileName);
+    alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
+
+    var jqxhr = $.get("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
+
+        window.setTimeout(function () {
+            // Do something with response
+            $("#dialog9").data('dialog').close();
+            alert(data.result);
+            reloadProject(project.id);
+        }, 500);
+
+    }).done(function () {
+        alert("second success ");
+    }).fail(function (detail) {
+        alert("error " + detail);
+    }).always(function () {
+        alert("finished");
+    });
+}
+
+
+
+function createFolder() {
+    var dialog = $("#createNewFolder_dialog").data('dialog');
+    dialog.close();
+    $("#dialog9").data('dialog').open();
+    var dirPath = $("#createNewFolder_inputDirectory").val();
+    var fileName = $("#createNewFolder_inputFolderName").val();
+
+    alert(dirPath + " " + fileName);
+    alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
+
+    var jqxhr = $.get("http://localhost:8080/project/createFolder/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
+
+        window.setTimeout(function () {
+            // Do something with response
+            $("#dialog9").data('dialog').close();
+            alert(data.result);
+            reloadProject(project.id);
+        }, 500);
+
     }).done(function () {
         alert("second success ");
     }).fail(function (detail) {
@@ -57,12 +130,15 @@ $(document).ready(function () {
                 data: data,
                 contentType: "application/json",
                 success: function (message) {
-                    // Do something with response
-                    alert(message.result + " respond save");
-                    countingTabSaved++;
-                    $("#saveProject").click();
-                    var pb = $("#pb1").data('progress');
-                    pb.set((countingTabSaved / countingTabArrayId) * 100);
+                    window.setTimeout(function () {
+                        // Do something with response
+                        alert(message.result + " respond save");
+                        countingTabSaved++;
+                        $("#saveProject").click();
+                        var pb = $("#pb1").data('progress');
+                        pb.set((countingTabSaved / countingTabArrayId) * 100);
+                    }, 500);
+
                 }
             });
         } else {
@@ -74,15 +150,47 @@ $(document).ready(function () {
     });
 
 
+    $("#createNewFile_buttonCreate").click(function () {
+        createFile();
+    });
+
+    $("#createNewFolder_buttonCreate").click(function () {
+        createFolder();
+    });
+
+    $("#closeTab").click(function () {
+        alert("close tab");
+    });
+
+
+
+    $("#createNewFolder_fluent").click(function () {
+        var dialog = $("#createNewFolder_dialog").data('dialog');
+        dialog.open();
+    });
+
+    $("#createNewFolder_buttonCancel").click(function () {
+        var dialog = $("#createNewFolder_dialog").data('dialog');
+        dialog.close();
+    });
+
+
 
 
     $("#createNewFile_fluent").click(function () {
         var dialog = $("#createNewFile_dialog").data('dialog');
+        $("#createNewFile_inputDirectory").empty();
+        $("#createNewFile_inputDirectory").append('<option value="%2f">/</option>');
+        for (var y = 0; y < project.sourceCode.folders.length; y++) {
+            var nameDir = project.sourceCode.folders[y].name;
+            $("#createNewFile_inputDirectory").append('<option value="%2f' + nameDir + '">/' + nameDir + '</option>');
+        }
         dialog.open();
     });
 
     $("#createProject_create").click(function () {
 
+        $("#createProject_waiting").data('dialog').open();
         var projectName = $("#namaProject_create").val();
         var boardType = $("#boardType_create").val();
         var icType = $("#icType_create").val();
@@ -104,9 +212,18 @@ $(document).ready(function () {
             processData: false,
             data: JSON.stringify(data),
             contentType: "application/json",
-            success: function (message) {
+            success: function (respond) {
                 // Do something with response
-                alert(message.makan);
+//                alert(message.makan);
+                window.setTimeout(function () {
+                    // Do something with response
+                    alert(respond.projectId);
+                    $("#createProject_waiting").data('dialog').close();
+                    var charm = $("#menu-special").data("charm");
+                    charm.close();
+                    openProjectById(respond.projectId);
+                }, 500);
+
             }
         });
     });
@@ -154,7 +271,7 @@ function updateProjectStructure(project) {
     for (var i = 0; i < project.files.length; i++) {
         filesText += addFile(project.files[i]);
     }
-    
+
     $("#projectBar").append(filesText);
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
@@ -179,7 +296,6 @@ function addTabFile(idFIle) {
     for (var p = 0; p < tabFileArrayID.length; p++) {
         if (tabFileArrayID[p] == idFIle) {
             $("#fileTab-" + idFIle).click();
-
             return;
         }
     }
@@ -189,9 +305,10 @@ function addTabFile(idFIle) {
     var tabFileId = "fileTab-" + idFIle;
     var sourceFileId = "fileSource-" + idFIle;
     var codeFileId = "codeSource-" + idFIle;
+    var closeTabId = "closeTab-" + idFIle;
 //    $("#tabCode").append('<li class="tabPanel" id="' + tabFileId + '" ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span id="' + tabFileId + '" style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
-    $("#tabCode").append('<li class="tabPanel"  ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span  style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
-    var sourcePane = '<div class="frame" id="' + sourceFileId + '" style="margin-top: 0px;padding: 0px">' +
+    $("#tabCode").append('<li class="tabPanel ' + closeTabId + '"  ><a id="' + tabFileId + '" href="#' + sourceFileId + '">' + fileName + '</a><span id="' + closeTabId + '"  style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>');
+    var sourcePane = '<div class="frame ' + ' ' + closeTabId + '" id="' + sourceFileId + '" style="margin-top: 0px;padding: 0px">' +
             '<iframe id="' + codeFileId + '"  name="mmm"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>' +
             '</div>';
     $("#tabSource").append(sourcePane);
@@ -202,6 +319,24 @@ function addTabFile(idFIle) {
         $(".tabPanel").click(function (event) {
 //            alert("klikable " + codeFileId);
             requestCodeSource(codeFileId);
+        });
+
+        $("#" + closeTabId).click(function (event) {
+            alert(closeTabId);
+            $("." + closeTabId).remove();
+            for (var p = 0; p < tabFileArrayID.length; p++) {
+                if (tabFileArrayID[p] == idFIle) {
+//                    if (p>=tabFileArrayID.length){
+//                        $("#fileTab-" + tabFileArrayID[p+1]).click();    
+//                    }else if(p<=0){
+//                        $("#fileTab-" + tabFileArrayID[p-1]).click();    
+//                    }else{
+//                        $("#fileTab-" + tabFileArrayID[p]).click();    
+//                    }
+                    tabFileArrayID.splice(p,1);
+                    break;
+                }
+            }
         });
 
         //to give listener to click tab
@@ -281,8 +416,8 @@ function getFileSourceFromEditor() {
 
 function reloadProject(idProject) {
     alert('reload project ' + idProject);
-    var jqxhr = $.get("http://localhost:8080/project/openProject/"+idProject, function (data) {
-        alert('respond '+idProject);
+    var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
+        alert('respond ' + idProject);
         project = data;
         $("#projectName").text("~" + project.name);
         $("#arduinoType").text(project.config.arduinoType);

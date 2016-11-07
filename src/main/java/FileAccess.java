@@ -40,9 +40,21 @@ public class FileAccess {
         return fileAccess;
     }
 
-    public void createFolder(String projectId, String fileName, Handler<Boolean> resultWrite) {
+    public void createFolder(String projectId, String folderName, Handler<Boolean> resultWrite) {
         // Write a file
-        vertx.fileSystem().mkdir("project/" + projectId + "/" + fileName, result -> {
+        vertx.fileSystem().mkdir("project/" + projectId + "/" + folderName, result -> {
+            if (result.succeeded()) {
+                resultWrite.handle(true);
+            } else {
+                resultWrite.handle(false);
+                System.err.println("Oh oh ..." + result.cause());
+            }
+        });
+    }
+
+    public void createFile(String projectId, String directory, String fileName, Handler<Boolean> resultWrite) {
+        // Write a file
+        vertx.fileSystem().createFile("project/" + projectId +  directory+"/"+fileName, result -> {
             if (result.succeeded()) {
                 resultWrite.handle(true);
             } else {
@@ -101,7 +113,7 @@ public class FileAccess {
                     fileJSON.put("id", new Base32().encodeAsString(
                             (splitFile[splitFile.length - 2]
                             + "/"
-                            + splitFile[splitFile.length-1 ]).
+                            + splitFile[splitFile.length - 1]).
                             getBytes()
                     ).replace("=", "0")
                     );
@@ -139,11 +151,11 @@ public class FileAccess {
         return tmp;
     }
 
-    public void saveFile(String source, String projectId, String fileId,Handler<Boolean> handlerIsScuucess) {
+    public void saveFile(String source, String projectId, String fileId, Handler<Boolean> handlerIsScuucess) {
         vertx.fileSystem().writeFileBlocking("project/" + projectId + "/" + fileId, Buffer.buffer(source));
         vertx.fileSystem().writeFile("project/" + projectId + "/" + fileId, Buffer.buffer(source), nahle -> {
             handlerIsScuucess.handle(nahle.succeeded());
         });
-        
+
     }
 }

@@ -1,0 +1,2 @@
+enak makan
+enak kos

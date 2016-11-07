@@ -1,2 +1,0 @@
-side main
-23
