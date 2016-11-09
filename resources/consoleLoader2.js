@@ -10,6 +10,7 @@ var tabActive = "";
 var countingTabArrayId = 0;
 
 var countingTabSaved = 0;
+var tabActiveId="";
 
 function openProjectById(idProject) {
     var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
@@ -20,11 +21,11 @@ function openProjectById(idProject) {
         $("#arduinoIC").text(project.config.icType);
         updateProjectStructure(project.sourceCode);
     }).done(function () {
-        alert("second success ");
+        //alert("second success ");
     }).fail(function (detail) {
-        alert("error " + detail);
+        //alert("error " + detail);
     }).always(function () {
-        alert("finished");
+        //alert("finished");
     });
 }
 
@@ -37,11 +38,11 @@ function openProject() {
         $("#arduinoIC").text(project.config.icType);
         updateProjectStructure(project.sourceCode);
     }).done(function () {
-        alert("second success ");
+        //alert("second success ");
     }).fail(function (detail) {
-        alert("error " + detail);
+        //alert("error " + detail);
     }).always(function () {
-        alert("finished");
+        //alert("finished");
     });
 }
 
@@ -52,24 +53,24 @@ function createFile() {
     var dirPath = $("#createNewFile_inputDirectory").val();
     var fileName = $("#createNewFile_inputFileName").val();
 
-    alert(dirPath + " " + fileName);
-    alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
+    //alert(dirPath + " " + fileName);
+    //alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
 
     var jqxhr = $.get("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
 
         window.setTimeout(function () {
             // Do something with response
             $("#dialog9").data('dialog').close();
-            alert(data.result);
+            //alert(data.result);
             reloadProject(project.id);
         }, 500);
 
     }).done(function () {
-        alert("second success ");
+        //alert("second success ");
     }).fail(function (detail) {
-        alert("error " + detail);
+        //alert("error " + detail);
     }).always(function () {
-        alert("finished");
+        //alert("finished");
     });
 }
 
@@ -82,24 +83,24 @@ function createFolder() {
     var dirPath = $("#createNewFolder_inputDirectory").val();
     var fileName = $("#createNewFolder_inputFolderName").val();
 
-    alert(dirPath + " " + fileName);
-    alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
+    //alert(dirPath + " " + fileName);
+    //alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
 
     var jqxhr = $.get("http://localhost:8080/project/createFolder/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
 
         window.setTimeout(function () {
             // Do something with response
             $("#dialog9").data('dialog').close();
-            alert(data.result);
+            //alert(data.result);
             reloadProject(project.id);
         }, 500);
 
     }).done(function () {
-        alert("second success ");
+        //alert("second success ");
     }).fail(function (detail) {
-        alert("error " + detail);
+        //alert("error " + detail);
     }).always(function () {
-        alert("finished");
+        //alert("finished");
     });
 }
 
@@ -110,19 +111,19 @@ $(document).ready(function () {
     $("#saveProject").click(function () {
         // Send the data using post
 
-        if (countingTabSaved < countingTabArrayId) {
+        if (countingTabSaved < tabFileArrayID.length) {
 
-            $("#completedSaveCounting").text('Completed ' + countingTabSaved + ' of ' + countingTabArrayId);
+            $("#completedSaveCounting").text('Completed ' + countingTabSaved + ' of ' + tabFileArrayID.length);
 //        var cleanBase32=tabFileArrayID[countingTabSaved].replace("0","=");
             var cleanBase32 = tabFileArrayID[countingTabSaved].replace(new RegExp("0", 'g'), "=");
-            alert(cleanBase32);
+            //alert(cleanBase32);
             var decodeId = Base32Decode(cleanBase32);
             $("#progressSaveFileName").text('~ ' + decodeId);
             $("#saveProjectProgress").data('dialog').open();
-            alert("saving " + tabFileArrayID[countingTabSaved]);
+            //alert("saving " + tabFileArrayID[countingTabSaved]);
             var $f = $('#codeSource-' + tabFileArrayID[countingTabSaved]);
             var data = $f.get(0).contentWindow.getValueEditor();
-            alert(data + " data source");
+            //alert(data + " data source");
             $.ajax({
                 url: 'http://localhost:8080/project/saveFile/' + project.id + "/" + tabFileArrayID[countingTabSaved],
                 type: "POST",
@@ -132,11 +133,11 @@ $(document).ready(function () {
                 success: function (message) {
                     window.setTimeout(function () {
                         // Do something with response
-                        alert(message.result + " respond save");
+                        //alert(message.result + " respond save");
                         countingTabSaved++;
                         $("#saveProject").click();
                         var pb = $("#pb1").data('progress');
-                        pb.set((countingTabSaved / countingTabArrayId) * 100);
+                        pb.set((countingTabSaved / tabFileArrayID.length) * 100);
                     }, 500);
 
                 }
@@ -159,7 +160,7 @@ $(document).ready(function () {
     });
 
     $("#closeTab").click(function () {
-        alert("close tab");
+        //alert("close tab");
     });
 
 
@@ -196,7 +197,7 @@ $(document).ready(function () {
         var icType = $("#icType_create").val();
         var visibility = $("#visibility_create").val();
         var detail = $("#detail_create").val();
-        alert(boardType);
+        //alert(boardType);
         var data = {
             name: projectName + "",
             board: boardType,
@@ -214,10 +215,10 @@ $(document).ready(function () {
             contentType: "application/json",
             success: function (respond) {
                 // Do something with response
-//                alert(message.makan);
+//                //alert(message.makan);
                 window.setTimeout(function () {
                     // Do something with response
-                    alert(respond.projectId);
+                    //alert(respond.projectId);
                     $("#createProject_waiting").data('dialog').close();
                     var charm = $("#menu-special").data("charm");
                     charm.close();
@@ -263,8 +264,8 @@ function updateProjectStructure(project) {
     $("#projectBar").empty();
     var filesText = "";
     var foldersText = "";
-    alert("makan");
-    alert(project.folders.length);
+    //alert("makan");
+    //alert(project.folders.length);
     for (var p = 0; p < project.folders.length; p++) {
         filesText += addFolder(project.folders[p]);
     }
@@ -301,7 +302,7 @@ function addTabFile(idFIle) {
     }
 
     $("#dialog9").data('dialog').open();
-    tabFileArrayID[countingTabArrayId++] = idFIle;
+    tabFileArrayID[tabFileArrayID.length] = idFIle;
     var tabFileId = "fileTab-" + idFIle;
     var sourceFileId = "fileSource-" + idFIle;
     var codeFileId = "codeSource-" + idFIle;
@@ -316,27 +317,51 @@ function addTabFile(idFIle) {
 
 
     $(document).ready(function () {
-        $(".tabPanel").click(function (event) {
-//            alert("klikable " + codeFileId);
+        $("#"+tabFileId).click(function (event) {
+//            //alert("klikable " + codeFileId);
             requestCodeSource(codeFileId);
+            tabActiveId = idFIle;
         });
+        
+        
+        
+//        $(".tabPanel").click(function (event) {
+////            //alert("klikable " + codeFileId);
+//            requestCodeSource(codeFileId);
+//            tabActiveId=idFIle;
+//        });
 
+        
+        /**
+         * error for close tab
+         */
         $("#" + closeTabId).click(function (event) {
-            alert(closeTabId);
+            //alert(closeTabId);
             $("." + closeTabId).remove();
             for (var p = 0; p < tabFileArrayID.length; p++) {
                 if (tabFileArrayID[p] == idFIle) {
-//                    if (p>=tabFileArrayID.length){
-//                        $("#fileTab-" + tabFileArrayID[p+1]).click();    
-//                    }else if(p<=0){
-//                        $("#fileTab-" + tabFileArrayID[p-1]).click();    
+                    if (idFIle==tabActiveId){
+                        if (p>0 && p<=tabFileArrayID.length){
+                            $("#fileTab-" + tabFileArrayID[p-1]).click();  
+                        }else{
+                            $("#fileTab-" + tabFileArrayID[p+1]).click();  
+                        }
+                    }
+//                    alert("close tab number "+p);
+//                    alert("lenght "+tabFileArrayID.length);
+//                    if (p>=tabFileArrayID.length-1){
+//                        alert("masuk open > "+ tabFileArrayID[0]);    
+//                        $("#fileTab-" + tabFileArrayID[0]).click();  
 //                    }else{
-//                        $("#fileTab-" + tabFileArrayID[p]).click();    
+//                        alert("masuk open =");
+//                        $("#fileTab-" + tabFileArrayID[p+1]).click();    
 //                    }
                     tabFileArrayID.splice(p,1);
+//                    alert("lenght after "+tabFileArrayID.length);
                     break;
                 }
             }
+            
         });
 
         //to give listener to click tab
@@ -359,7 +384,7 @@ function closeTab(idFile) {
  */
 function requestCodeSource(codeFileId) {
 
-//    alert(codeFileId+" code file ID");
+//    //alert(codeFileId+" code file ID");
     var $f = $('#' + codeFileId);
     if ($f.get(0).contentWindow.getValueEditor() != 'null') {
         return;
@@ -371,11 +396,11 @@ function requestCodeSource(codeFileId) {
         $f.get(0).contentWindow.setValueEditor(data);
         $("#dialog9").data('dialog').close();
     }).done(function () {
-//        alert("second success ");
+//        //alert("second success ");
     }).fail(function (data) {
-        alert("error " + data);
+        //alert("error " + data);
     }).always(function () {
-//        alert("finished");
+//        //alert("finished");
     });
 }
 
@@ -387,7 +412,7 @@ function addFolder(folder) {
 
         filesText += addSubFile(folder.files[p], folder.name);
     }
-    alert(filesText);
+    //alert(filesText);
     return '<li class="node" ><span class="leaf"><span class="mif-folder"></span> ' + folder.name + '</span><span class="node-toggle"></span><ul>' + filesText + '</ul></li>';
 }
 
@@ -415,9 +440,9 @@ function getFileSourceFromEditor() {
 }
 
 function reloadProject(idProject) {
-    alert('reload project ' + idProject);
+    //alert('reload project ' + idProject);
     var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
-        alert('respond ' + idProject);
+        //alert('respond ' + idProject);
         project = data;
         $("#projectName").text("~" + project.name);
         $("#arduinoType").text(project.config.arduinoType);
@@ -426,21 +451,23 @@ function reloadProject(idProject) {
         var charm = $("#menu-special").data("charm");
         charm.close();
     }).done(function () {
-        alert("second success ");
+        //alert("second success ");
     }).fail(function (detail) {
-        alert("error " + detail);
+        //alert("error " + detail);
     }).always(function () {
-        alert("finished");
+        //alert("finished");
     });
 }
 
 
 function getListAllProject() {
+    $("#panelListOfProject").empty();
+    
     var makeUI = $.get("http://localhost:8080/project/getListProject", function (data) {
-        alert("dat " + data.length);
+        //alert("dat " + data.length);
 
 
-        $("#panelListOfProject").empty();
+        
 
         for (var p = 0; p < data.length; p++) {
 
@@ -449,7 +476,7 @@ function getListAllProject() {
             var dateModified = data[p].date;
             var idProjectInListOpen = data[p].id + "-list";
             var id = data[p].id + "";
-            alert("tambah incere " + idProjectInListOpen);
+            //alert("tambah incere " + idProjectInListOpen);
             var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
                     '<a href = "#" >' +
                     '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
@@ -465,11 +492,11 @@ function getListAllProject() {
         }
 
     }).done(function () {
-//        alert("second success ");
+//        //alert("second success ");
     }).fail(function (data) {
-//        alert("error " + data);
+//        //alert("error " + data);
     }).always(function () {
-//        alert("finished");
+//        //alert("finished");
     });
 
 
