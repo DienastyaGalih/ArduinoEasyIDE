@@ -26,8 +26,6 @@
         <script src="js/ga.js"></script>
         <script src="consoleLoader2.js"></script>
 
-
-
     </head>
     <body class="bg-grayLighter" >
 
@@ -54,26 +52,9 @@
                         </ul>
                     </td>
                     <td width="65%" align="left" style="padding-left: 20px">
-                        <div id="openProjectPanel" class="sidePanelMenuFile" style="width:230px">
-                            <br>
-                            <h2 class="fg-black text-light border">Open Project</h2>
-                            <br>
-                            <div style="height:450px;width:99%;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-
-                                <ul class="sidebar navy " id="panelListOfProject" style="width: 100%; padding-right: 0px ;margin-right: 0px">
-                                    <li style="height: 50px;"  >
-                                        <a href="#" >
-                                            <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
-                                            <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
-                                        </a>
-                                    </li>
-                                </ul>    
-                            </div><br>
-                            <button class="button">Open</button>
-                        </div>
 
                         <!--//new Project-->
-                        <div class="sidePanelMenuFile" hidden id="newProjectPanel">
+                        <div class="sidePanelMenuFile"  id="newProjectPanel">
                             <br>
                             <h2 class="fg-black text-light border">New Project</h2>
                             <br>
@@ -101,9 +82,9 @@
                             <label class="fg-black">Visibility</label><br>
                             <div class="input-control select">
                                 <select id="visibility_create">
-                                    <option>Private</option>
-                                    <option>Public</option>
-                                    <option>Friend</option>
+                                    <option value="0">Private</option>
+                                    <option value="1" >Public</option>
+                                    <option value="2" >Friend</option>
                                 </select>
                             </div><br><br>
                             <label class="fg-black">Detail</label><br>
@@ -112,6 +93,25 @@
                             </div><br/>
                             <button class="button" id="createProject_create">Create</button>
                         </div>
+                        <!--openProject-->
+                        <div id="openProjectPanel" hidden class="sidePanelMenuFile" style="width:230px">
+                            <br>
+                            <h2 class="fg-black text-light border">Open Project</h2>
+                            <br>
+                            <div style="height:450px;width:99%;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+                                <div hidden id="waitingOpenProject" style="width: 100%;color:transparent;margin-top: 100px; padding-left: 35%; " data-role="preloader" data-type="ring" data-style="dark"></div>
+                                <ul hidden class="sidebar navy " id="panelListOfProject" style="width: 100%; padding-right: 0px ;margin-right: 0px">
+                                    <li style="height: 50px;"  >
+                                        <a href="#" >
+                                            <span class="title fg-black" style="padding-left: 10px; padding-top:8px"><img style="margin-right: 7px"  src="images/arduinoProjectIcon.png" width="25">Project KRPSI berkaki </span>
+                                            <span class="title fg-dark text-light" style="margin-left: 42px;margin-top:-17px; font-size: 11px">12-2-2015</span>
+                                        </a>
+                                    </li>
+                                </ul>    
+                            </div><br>
+                            <button class="button">Open</button>
+                        </div>
+
                     </td>
                 </tr>
             </table>
@@ -187,7 +187,10 @@
                                 <span class="icon mif-cloud-download"></span>
                                 <span class="label">Download</span>
                             </button>
-
+                            <button id="shareButton" class="fluent-big-button " style="width: 70px">
+                                <span class="icon mif-share"></span>
+                                <span class="label">Share</span>
+                            </button>
                         </div>
                         <div class="tab-group-caption " style="padding: 2px" >Saving</div>
                     </div>
@@ -258,15 +261,17 @@
 
         </div>
 
+
         <div class="grid condensed " >
             <div class="row cells12 bg-grayLighter" >
-                <div class="cell  colspan2" style="padding-left: 30px;padding-top: 10px">
-                    <div class="treeview" data-role="treeview" >
-                        <ul id="projectBar">
+                <div class="cell  colspan2" style="padding-left: 10px;padding-top: 0px; padding-right: 10px">
+                    <div class="treeview " data-role="treeview" style="overflow: auto;height: 600px;border: 0px solid #9d9595; border-right: 0;border-left: 0">
+                        <ul id="projectBar" >
 
                         </ul>
                     </div>
                 </div>
+
                 <div class="cell  colspan10 ">
                     <div class="tabcontrol2 "  data-role="tabcontrol" data-open-target="#frame_5_1" >
                         <ul class="tabs" id="tabCode">
@@ -274,9 +279,9 @@
                             <!--                            <li><a href="#frame_5_2">Minum</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>
                                                         <li><a href="#frame_5_3">Makan</a><span style="margin-top:  -6px;margin-left: -17px; color: #eaeaea" class="on-left mif-cancel fg-hover-yellow "></span></li>-->
                         </ul>
-                        <div class="frames bordered" id="tabSource" >
-                            <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px;" >
-                                <iframe id="codeEditor" class="disabled"  frameborder="1" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
+                        <div class="frames " id="tabSource" >
+                            <div class="frame" id="frame_5_1" style="margin-top: 0px;padding: 0px;border: 2px solid #9d9595;" >
+                                <iframe id="codeEditor" class="disabled"  frameborder="0" width="100%" height="555" src="editor/editor2.html"></iframe>                                             
                             </div>
                         </div>
                     </div>
@@ -284,30 +289,30 @@
             </div>
 
 
-            <div class="row cells12">
-                <div class="cell debug">1</div>
-                <div class="cell debug colspan10">2</div>
-                <div class="cell debug">3</div>
-            </div>
-            <div class="row cells5">
-                <div class="cell debug">1</div>
-                <div class="cell debug colspan3">2</div>
-                <div class="cell debug">3</div>
-            </div>
-            <div class="row cells12">
-                <div class="cell debug">1</div>
-                <div class="cell debug">2</div>
-                <div class="cell debug">3</div>
-                <div class="cell debug">4</div>
-                <div class="cell debug">5</div>
-                <div class="cell debug">6</div>
-                <div class="cell debug">7</div>
-                <div class="cell debug">8</div>
-                <div class="cell debug">9</div>
-                <div class="cell debug">10</div>
-                <div class="cell debug">11</div>
-                <div class="cell debug">12</div>
-            </div>
+            <!--            <div class="row cells12">
+                            <div class="cell debug">1</div>
+                            <div class="cell debug colspan10">2</div>
+                            <div class="cell debug">3</div>
+                        </div>
+                        <div class="row cells5">
+                            <div class="cell debug">1</div>
+                            <div class="cell debug colspan3">2</div>
+                            <div class="cell debug">3</div>
+                        </div>
+                        <div class="row cells12">
+                            <div class="cell debug">1</div>
+                            <div class="cell debug">2</div>
+                            <div class="cell debug">3</div>
+                            <div class="cell debug">4</div>
+                            <div class="cell debug">5</div>
+                            <div class="cell debug">6</div>
+                            <div class="cell debug">7</div>
+                            <div class="cell debug">8</div>
+                            <div class="cell debug">9</div>
+                            <div class="cell debug">10</div>
+                            <div class="cell debug">11</div>
+                            <div class="cell debug">12</div>
+                        </div>-->
         </div>
         <div  data-role="dialog" id="dialog9" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px">
             <h3 align="center" class="text-light">Fetching code</h3>
@@ -434,7 +439,7 @@
                     </tr>
                     <tr>
                         <td>
-                            
+
                         </td>
                         <td align="right">
                             <button id="createNewFolder_buttonCancel" class=" small-button" style="border: 0">Cancel</button>
@@ -446,8 +451,34 @@
                 <br>
             </div>
         </div>
+        <div id="consoleCompiling"  class="shadow" data-role="charm" data-position="right" style="width: 300px; background: #6d6d6d">
+            <table border="0" width="100%">
+                <tr>
+                    <td>
+                        <h3 class="text-light fg-white" >Compile result</h3>            
+                    </td>
+                    <td align="right">
+                        <span class="mif-arrow-right mif-1k2x fg-hover-blue" id="compileResultCloseButton"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <div  class="input-control  textarea"  data-text-max-height="300" style="width: 100%; " >
+                <textarea id="compileResultTextArea" readonly  style="font-family: Courier New"  rows="30" class="bg-grayLighter" ></textarea>
+            </div>
+        </div>
 
         <script>
+
+//            function showCharm(id) {
+//                var charm = $(id).data("charm");
+//                if (charm.element.data("opened") === true) {
+//                    charm.close();
+//                } else {
+//                    charm.open();
+//                }
+//            }
+//            showCharm("#consoleCompiling");
 
 //
 //            var dialog = $("#createNewFolder_dialog").data('dialog');

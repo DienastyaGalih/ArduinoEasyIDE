@@ -4,16 +4,19 @@
  * and open the template in the editor.
  */
 
+
+var targetServer = "31.220.54.10";
+//var targetServer="localhost";
 var project;
 var tabFileArrayID = [];
 var tabActive = "";
 var countingTabArrayId = 0;
 
 var countingTabSaved = 0;
-var tabActiveId="";
+var tabActiveId = "";
 
 function openProjectById(idProject) {
-    var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
+    var jqxhr = $.get("http://" + targetServer + ":8080/project/openProject/" + idProject, function (data) {
 
         project = data;
         $("#projectName").text("~" + project.name);
@@ -30,7 +33,7 @@ function openProjectById(idProject) {
 }
 
 function openProject() {
-    var jqxhr = $.get("http://localhost:8080/project/openProject/galih1994_679cfedbe131466b90c06566ee548e07", function (data) {
+    var jqxhr = $.get("http://" + targetServer + ":8080/project/openProject/galih1994_679cfedbe131466b90c06566ee548e07", function (data) {
 
         project = data;
         $("#projectName").text("~" + project.name);
@@ -56,7 +59,7 @@ function createFile() {
     //alert(dirPath + " " + fileName);
     //alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
 
-    var jqxhr = $.get("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
+    var jqxhr = $.get("http://" + targetServer + ":8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
 
         window.setTimeout(function () {
             // Do something with response
@@ -86,7 +89,7 @@ function createFolder() {
     //alert(dirPath + " " + fileName);
     //alert("http://localhost:8080/project/createFile/" + project.id + "/" + dirPath + "/" + fileName);
 
-    var jqxhr = $.get("http://localhost:8080/project/createFolder/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
+    var jqxhr = $.get("http://" + targetServer + ":8080/project/createFolder/" + project.id + "/" + dirPath + "/" + fileName, function (data) {
 
         window.setTimeout(function () {
             // Do something with response
@@ -125,7 +128,7 @@ $(document).ready(function () {
             var data = $f.get(0).contentWindow.getValueEditor();
             //alert(data + " data source");
             $.ajax({
-                url: 'http://localhost:8080/project/saveFile/' + project.id + "/" + tabFileArrayID[countingTabSaved],
+                url: 'http://' + targetServer + ':8080/project/saveFile/' + project.id + "/" + tabFileArrayID[countingTabSaved],
                 type: "POST",
                 processData: false,
                 data: data,
@@ -208,7 +211,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: 'http://localhost:8080/project/create/',
+            url: 'http://' + targetServer + ':8080/project/create/',
             type: "POST",
             processData: false,
             data: JSON.stringify(data),
@@ -232,6 +235,12 @@ $(document).ready(function () {
         var charm = $("#menu-special").data("charm");
         charm.close();
     });
+
+    $("#compileResultCloseButton").click(function () {
+        var charm = $("#consoleCompiling").data("charm");
+        charm.close();
+    });
+
     $("#newProjectButton").click(function () {
 
         $(".sideBarLi").removeClass("active");
@@ -240,6 +249,8 @@ $(document).ready(function () {
         $("#newProjectPanel").show();
     });
     $("#openProjectButton").click(function () {
+
+        $("#waitingOpenProject").show();
         $(".sideBarLi").removeClass("active");
         $("#openProjectButton").addClass("active");
         getListAllProject();
@@ -247,8 +258,25 @@ $(document).ready(function () {
         $("#openProjectPanel").show();
     });
     $("#virifyButton").click(function (event) {
-        var $f = $("#frameCode");
-        $f.get(0).contentWindow.setValueEditor("makan"); //works    
+//        alert("verivying");
+        var charm = $("#consoleCompiling").data("charm");
+        charm.open();
+        var makeUI = $.get("http://" + targetServer + ":8080/project/compile/" + project.id , function (data) {
+//            alert(data);    
+            $("#compileResultTextArea").text(data);
+            var textarea = document.getElementById('compileResultTextArea');
+            textarea.scrollTop = textarea.scrollHeight;
+            
+        }).done(function () {
+//        //alert("second success ");
+        }).fail(function (data) {
+            //alert("error " + data);
+        }).always(function () {
+//        //alert("finished");
+        });
+
+//        var $f = $("#frameCode");
+//        $f.get(0).contentWindow.setValueEditor("makan"); //works    
     });
 });
 $(window).load(function () {
@@ -277,10 +305,7 @@ function updateProjectStructure(project) {
     $(document).ready(function () {
         $(".fileNode").dblclick(function (event) {
             tabActive = event.target.id;
-
-
             addTabFile(event.target.id)
-
         });
     });
 }
@@ -317,21 +342,21 @@ function addTabFile(idFIle) {
 
 
     $(document).ready(function () {
-        $("#"+tabFileId).click(function (event) {
+        $("#" + tabFileId).click(function (event) {
 //            //alert("klikable " + codeFileId);
             requestCodeSource(codeFileId);
             tabActiveId = idFIle;
         });
-        
-        
-        
+
+
+
 //        $(".tabPanel").click(function (event) {
 ////            //alert("klikable " + codeFileId);
 //            requestCodeSource(codeFileId);
 //            tabActiveId=idFIle;
 //        });
 
-        
+
         /**
          * error for close tab
          */
@@ -340,11 +365,11 @@ function addTabFile(idFIle) {
             $("." + closeTabId).remove();
             for (var p = 0; p < tabFileArrayID.length; p++) {
                 if (tabFileArrayID[p] == idFIle) {
-                    if (idFIle==tabActiveId){
-                        if (p>0 && p<=tabFileArrayID.length){
-                            $("#fileTab-" + tabFileArrayID[p-1]).click();  
-                        }else{
-                            $("#fileTab-" + tabFileArrayID[p+1]).click();  
+                    if (idFIle == tabActiveId) {
+                        if (p > 0 && p <= tabFileArrayID.length) {
+                            $("#fileTab-" + tabFileArrayID[p - 1]).click();
+                        } else {
+                            $("#fileTab-" + tabFileArrayID[p + 1]).click();
                         }
                     }
 //                    alert("close tab number "+p);
@@ -356,12 +381,12 @@ function addTabFile(idFIle) {
 //                        alert("masuk open =");
 //                        $("#fileTab-" + tabFileArrayID[p+1]).click();    
 //                    }
-                    tabFileArrayID.splice(p,1);
+                    tabFileArrayID.splice(p, 1);
 //                    alert("lenght after "+tabFileArrayID.length);
                     break;
                 }
             }
-            
+
         });
 
         //to give listener to click tab
@@ -391,7 +416,7 @@ function requestCodeSource(codeFileId) {
     }
 
     var cleanId = codeFileId.split("-")[1];
-    var makeUI = $.get("http://localhost:8080/project/loadFile/" + project.id + "/" + cleanId, function (data) {
+    var makeUI = $.get("http://" + targetServer + ":8080/project/loadFile/" + project.id + "/" + cleanId, function (data) {
         var $f = $('#' + codeFileId);
         $f.get(0).contentWindow.setValueEditor(data);
         $("#dialog9").data('dialog').close();
@@ -418,11 +443,15 @@ function addFolder(folder) {
 
 
 function addSubFile(file, folderName) {
-    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+//    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+//return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '"><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code">' + file.name + '</span></span></li>';
+//return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code leaf">' + file.name + '</span></li>';
+    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code leaf" ><span  id="fileBar-' + file.id + "-" + file.name + '" style="padding-left:3px">' + file.name + '</span></span></li>';
 }
 
 function addFile(file) {
-    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+//    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf"><span id="fileBar-' + file.id + "-" + file.name + '" class="icon mif-file-code"></span>' + file.name + '</span></li>';
+    return '<li class="fileNode" id="fileBar-' + file.id + "-" + file.name + '" ><span id="fileBar-' + file.id + "-" + file.name + '" class="leaf icon mif-file-code"><span id="fileBar-' + file.id + "-" + file.name + '" style="padding-left:3px">' + file.name + '</span></span></li>';
 }
 
 
@@ -441,7 +470,7 @@ function getFileSourceFromEditor() {
 
 function reloadProject(idProject) {
     //alert('reload project ' + idProject);
-    var jqxhr = $.get("http://localhost:8080/project/openProject/" + idProject, function (data) {
+    var jqxhr = $.get("http://" + targetServer + ":8080/project/openProject/" + idProject, function (data) {
         //alert('respond ' + idProject);
         project = data;
         $("#projectName").text("~" + project.name);
@@ -462,22 +491,17 @@ function reloadProject(idProject) {
 
 function getListAllProject() {
     $("#panelListOfProject").empty();
-    
-    var makeUI = $.get("http://localhost:8080/project/getListProject", function (data) {
+
+    var makeUI = $.get("http://" + targetServer + ":8080/project/getListProject", function (data) {
         //alert("dat " + data.length);
-
-
-        
-
         for (var p = 0; p < data.length; p++) {
-
-
             var projectName = data[p].name;
             var dateModified = data[p].date;
             var idProjectInListOpen = data[p].id + "-list";
             var id = data[p].id + "";
             //alert("tambah incere " + idProjectInListOpen);
-            var list = '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
+            var list =
+                    '<li style="height: 50px;" class="listProject_open" id="' + idProjectInListOpen + '" >' +
                     '<a href = "#" >' +
                     '<span class = "title fg-black" style = "padding-left: 10px; padding-top:8px" >' +
                     '<img style = "margin-right: 7px"  src = "images/arduinoProjectIcon.png" width = "25" >' + projectName + '</span>' +
@@ -490,6 +514,12 @@ function getListAllProject() {
                 reloadProject(this.id.split('-')[0]);
             });
         }
+
+        window.setTimeout(function () {
+            $("#panelListOfProject").show();
+            $("#waitingOpenProject").hide();
+        }, 500);
+
 
     }).done(function () {
 //        //alert("second success ");

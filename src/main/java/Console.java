@@ -29,6 +29,9 @@ public class Console extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> fut) {
+
+        ShellInteraction.getInstance().init(vertx);
+
         HttpServer server = vertx.createHttpServer();
 
         Router router = Router.router(vertx);
@@ -59,11 +62,35 @@ public class Console extends AbstractVerticle {
         router.post("/project/updateProjectConfig/:fileId").handler(this::testing);
         router.get("/project/downloadHex/:projectId").handler(this::testing);
 
+        router.get("/project/compile/:projectId").handler(this::handleCompile);
+
         router.get("/project/createFile/:projectId/:directory/:fileName").handler(this::handleCreateFile);
         router.get("/project/createFolder/:projectId/:directory/:folderName").handler(this::handleCreateFolder);
 
         server.requestHandler(router::accept).listen(8080);
 
+    }
+
+    private void handleCompile(RoutingContext routingContext) {
+//        String productID = routingContext.request().getParam("projectId");
+//        HttpServerResponse response = routingContext.response();
+//        
+//        
+//        
+//        response.putHeader("content-type", "text/plain").end("makan malam enak kan");
+
+
+        String projectId = routingContext.request().getParam("projectId");
+        HttpServerResponse response = routingContext.response();
+//        response.putHeader("content-type", "application/json");
+//        response.setChunked(true);
+        
+        ShellInteraction.getInstance().compile(projectId,response);
+//        response.end("finish");
+        
+//        DbHelper.getInstance().getListProject(username, handler -> {
+//            
+//        });
     }
 
     private void handleCreateFolder(RoutingContext routingContext) {

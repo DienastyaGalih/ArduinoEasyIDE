@@ -281,50 +281,50 @@ public class DbHelper {
 
     }
 
-    private void createFilerFolderDefault(Handler<String> handler) {
-        System.out.println("make make asdf");
-//        String query= "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
-//                + "VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
-        String query
-                = "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
-                + "	VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
-
-        mySQLClient.getConnection(resConnection -> {
-            if (resConnection.succeeded()) {
-                SQLConnection connection;
-                connection = resConnection.result();
-                connection.setAutoCommit(true, autoCommit -> {
-                    if (autoCommit.succeeded()) {
-
-                        connection.query(query, handlerQuery -> {
-                            if (handlerQuery.succeeded()) {
-
-                                ResultSet resultSet = handlerQuery.result();
-                                System.out.println(resultSet.toJson().toString() + " bener katanya");
-                                handler.handle(resultSet.toJson().toString());
-//                                handler.handle(resultSet.toJson());
-
-                            } else {
-
-                                System.out.println(handlerQuery.cause());
-                                System.out.println("failed ---");
-                            }
-                            connection.close();
-                        });
-                    } else {
-                        System.out.println("auto commit failed ---");
-                    }
-
-                });
-
-                // Got a connection
-            } else {
-                // Failed to get connection - deal with it
-                System.out.println("true failes");
-            }
-        });
-
-    }
+//    private void createFilerFolderDefault(Handler<String> handler) {
+//        System.out.println("make make asdf");
+////        String query= "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
+////                + "VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
+//        String query
+//                = "INSERT INTO arduinoeasydb.folders (`PROJECT_pk_id_project`, `name`, create_date, modify_date) "
+//                + "	VALUES ( (SELECT max(pk_id_project) FROM project), 'lib', '2016-11-01 10:17:43', '2016-11-01 10:17:43');";
+//
+//        mySQLClient.getConnection(resConnection -> {
+//            if (resConnection.succeeded()) {
+//                SQLConnection connection;
+//                connection = resConnection.result();
+//                connection.setAutoCommit(true, autoCommit -> {
+//                    if (autoCommit.succeeded()) {
+//
+//                        connection.query(query, handlerQuery -> {
+//                            if (handlerQuery.succeeded()) {
+//
+//                                ResultSet resultSet = handlerQuery.result();
+//                                System.out.println(resultSet.toJson().toString() + " bener katanya");
+//                                handler.handle(resultSet.toJson().toString());
+////                                handler.handle(resultSet.toJson());
+//
+//                            } else {
+//
+//                                System.out.println(handlerQuery.cause());
+//                                System.out.println("failed ---");
+//                            }
+//                            connection.close();
+//                        });
+//                    } else {
+//                        System.out.println("auto commit failed ---");
+//                    }
+//
+//                });
+//
+//                // Got a connection
+//            } else {
+//                // Failed to get connection - deal with it
+//                System.out.println("true failes");
+//            }
+//        });
+//
+//    }
 
     public void createProject(String projectId,String username, String projectName, String detail, String visibility, String createdDate, String modifyDate, String boardType, String icType, Handler<JsonObject> handler) {
         

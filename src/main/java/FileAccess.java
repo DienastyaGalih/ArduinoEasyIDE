@@ -23,9 +23,13 @@ import org.apache.commons.codec.binary.Base32;
 public class FileAccess {
 
     Vertx vertx;
-
+    String splitter;
+    
     public void init(Vertx vertx) {
         this.vertx = vertx;
+        if (System.getProperty("os.name").toLowerCase().indexOf("linux")>=0) {
+//            splitter="\";
+        }
     }
     private static FileAccess fileAccess;
 
@@ -94,7 +98,8 @@ public class FileAccess {
             FileProps something = vertx.fileSystem().lpropsBlocking(directory);
             if (something.isDirectory()) {
                 JsonObject directoryJSON = new JsonObject();
-                String splitDirectory[] = directory.split("\\\\");
+                String splitDirectory[] = directory.split("/");
+//                String splitDirectory[] = directory.split("\\\\");
                 directoryJSON.put("name", splitDirectory[splitDirectory.length - 1]);
 //                tinggal tambahkan encode menggunakan base 64 agar tidak terdeteksi titik.
                 String id = splitDirectory[splitDirectory.length - 2];
@@ -108,7 +113,8 @@ public class FileAccess {
                 JsonArray subFiles = new JsonArray();
                 for (String subDirectoryFile : subDirectorysFiles) {
                     JsonObject fileJSON = new JsonObject();
-                    String splitFile[] = subDirectoryFile.split("\\\\");
+                    String splitFile[] = subDirectoryFile.split("/");
+//                    String splitFile[] = subDirectoryFile.split("\\\\");
                     fileJSON.put("name", splitFile[splitFile.length - 1]);
                     fileJSON.put("id", new Base32().encodeAsString(
                             (splitFile[splitFile.length - 2]
@@ -126,7 +132,8 @@ public class FileAccess {
 
             } else {
                 JsonObject fileJSON = new JsonObject();
-                String splitFile[] = directory.split("\\\\");
+                String splitFile[] = directory.split("/");                
+//                String splitFile[] = directory.split("\\\\");
                 fileJSON.put("name", splitFile[splitFile.length - 1]);
                 fileJSON.put("id", new Base32().encodeAsString(
                         splitFile[splitFile.length - 1].
