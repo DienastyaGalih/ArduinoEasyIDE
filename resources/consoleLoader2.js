@@ -5,8 +5,12 @@
  */
 
 
-var targetServer = "31.220.54.10";
-//var targetServer="localhost";
+//var targetServer = "31.220.54.10";
+//var targetServer = "localhost";
+var targetServer = "192.168.1.184";
+var boardType = "";
+var processorType = "";
+
 var project;
 var tabFileArrayID = [];
 var tabActive = "";
@@ -154,6 +158,36 @@ $(document).ready(function () {
     });
 
 
+
+
+    $("#consoleButton").click(function () {
+        consoleButton();
+    });
+
+
+    $("#uploadButton").click(function () {
+        uploadHex();
+    });
+
+    $("#cleanButton").click(function () {
+        cleanProject();
+    });
+
+
+    $("#portSerial_menuButton").click(function () {
+        choosePortSerial();
+    });
+
+
+    $("#portSerial_buttonCancel").click(function () {
+        var dialog = $("#portSerial_dialog").data('dialog');
+        dialog.close();
+    });
+
+    $("#portSerial_buttonSave").click(function () {
+        saveSerialPort();
+    });
+
     $("#createNewFile_buttonCreate").click(function () {
         createFile();
     });
@@ -165,6 +199,48 @@ $(document).ready(function () {
     $("#closeTab").click(function () {
         //alert("close tab");
     });
+
+    $("#configBoardButton").click(function () {
+        var dialog = $("#arduinoBoardType").data('dialog');
+        dialog.open();
+    });
+
+    $("#arduinoBoardType_buttonCancel").click(function () {
+        var dialog = $("#arduinoBoardType").data('dialog');
+        dialog.close();
+    });
+
+    $("#arduinoBoardType_buttonSave").click(function () {
+        boardType = $("#arduinoBoardType_selectedBoard").val();
+        processorType = $("#arduinoBoardType_selectedProcessor").val();
+
+        var dialog = $("#arduinoBoardType").data('dialog');
+        dialog.close();
+        $("#arduinoBoardType_name").text(boardType);
+        alert(boardType + " " + processorType);
+
+
+
+
+
+        var makeUI = $.get("http://" + targetServer + ":8080/project/updateBoardType/" + project.id + "/" + boardType + "/" + processorType, function (data) {
+
+
+            alert(data.result);
+
+
+        }).done(function () {
+
+        }).fail(function (data) {
+
+        }).always(function () {
+
+        });
+
+
+
+    });
+
 
 
 
@@ -258,22 +334,27 @@ $(document).ready(function () {
         $("#openProjectPanel").show();
     });
     $("#virifyButton").click(function (event) {
+        compileProject();
 //        alert("verivying");
-        var charm = $("#consoleCompiling").data("charm");
-        charm.open();
-        var makeUI = $.get("http://" + targetServer + ":8080/project/compile/" + project.id , function (data) {
-//            alert(data);    
-            $("#compileResultTextArea").text(data);
-            var textarea = document.getElementById('compileResultTextArea');
-            textarea.scrollTop = textarea.scrollHeight;
-            
-        }).done(function () {
-//        //alert("second success ");
-        }).fail(function (data) {
-            //alert("error " + data);
-        }).always(function () {
-//        //alert("finished");
-        });
+//        var charm = $("#consoleCompiling").data("charm");
+//        charm.open();
+//        $("#compileResultTextArea").empty();
+//        var makeUI = $.get("http://" + targetServer + ":8080/project/compile/" + project.id, function (data) {
+////            alert(data);    
+//            $("#compileResultTextArea").append(data);
+//            $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 1000);
+////            var textarea = document.getElementById('compileResultTextArea');
+////            textarea.scrollTop = textarea.scrollHeight;
+//
+//
+//
+//        }).done(function () {
+////        //alert("second success ");
+//        }).fail(function (data) {
+//            //alert("error " + data);
+//        }).always(function () {
+//            alert("allwaysS");
+//        });
 
 //        var $f = $("#frameCode");
 //        $f.get(0).contentWindow.setValueEditor("makan"); //works    
@@ -470,15 +551,27 @@ function getFileSourceFromEditor() {
 
 function reloadProject(idProject) {
     //alert('reload project ' + idProject);
+//    fetchingProject
+    $("#fetchingProject").data('dialog').open();
+
     var jqxhr = $.get("http://" + targetServer + ":8080/project/openProject/" + idProject, function (data) {
         //alert('respond ' + idProject);
-        project = data;
-        $("#projectName").text("~" + project.name);
-        $("#arduinoType").text(project.config.arduinoType);
-        $("#arduinoIC").text(project.config.icType);
-        updateProjectStructure(project.sourceCode);
-        var charm = $("#menu-special").data("charm");
-        charm.close();
+
+
+        window.setTimeout(function () {
+            $("#fetchingProject").data('dialog').close();
+            project = data;
+            $("#projectName").text("~" + project.name);
+            $("#arduinoType").text(project.config.arduinoType);
+            $("#arduinoIC").text(project.config.icType);
+            updateProjectStructure(project.sourceCode);
+            var charm = $("#menu-special").data("charm");
+            charm.close();
+
+
+        }, 500);
+
+
     }).done(function () {
         //alert("second success ");
     }).fail(function (detail) {
@@ -537,4 +630,234 @@ function getListAllProject() {
 function Base32Decode(s) {
 
     return s;
+}
+
+function choosePortSerial() {
+
+
+    $("#fetchingProject").data('dialog').open();
+
+
+    $("#listSerialPort").empty();
+
+    var makeUI = $.get("http://" + targetServer + ":8080/project/getListPort", function (data) {
+
+
+        for (var p = 0; p < data.length; p++) {
+            $("#listSerialPort").append('<option value="%2fdev%2f' + data[p] + '">/dev/' + data[p] + '</option>');
+        }
+
+
+        window.setTimeout(function () {
+            var dialog = $("#portSerial_dialog").data('dialog');
+            dialog.open();
+            $("#fetchingProject").data('dialog').close();
+        }, 500);
+
+
+    }).done(function () {
+//        alert("done");
+    }).fail(function (data) {
+//        alert("failed");
+    }).always(function () {
+//        alert("allways");
+    });
+
+
+
+
+}
+
+function compileProject() {
+    var charm = $("#consoleCompiling").data("charm");
+    charm.open();
+    $("#compileResultTextArea").empty();
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://" + targetServer + ":8080/project/compile/" + project.id);
+        socket.onmessage = function (event) {
+            $("#compileResultTextArea").append(event.data);
+            $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 0);
+        }
+        socket.onopen = function (event) {
+
+        };
+        socket.onclose = function (event) {
+
+        };
+    } else {
+        alert("Your browser does not support Websockets. (Use Chrome)");
+    }
+}
+
+
+
+
+function cleanProject() {
+
+//    var charm = $("#consoleCompiling").data("charm");
+//    charm.open();
+//    $("#compileResultTextArea").empty();
+//    var makeUI = $.get("http://" + targetServer + ":8080/project/clean/" + project.id, function (data) {
+//
+//        $("#compileResultTextArea").append(data);
+//        $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 1000);
+//
+//    }).done(function () {
+////        //alert("second success ");
+//    }).fail(function (data) {
+//        //alert("error " + data);
+//    }).always(function () {
+////        alert("allwaysS");
+//    });
+
+
+    var charm = $("#consoleCompiling").data("charm");
+    charm.open();
+    $("#compileResultTextArea").empty();
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://" + targetServer + ":8080/project/clean/" + project.id);
+        socket.onmessage = function (event) {
+            $("#compileResultTextArea").append(event.data);
+            $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 0);
+        }
+        socket.onopen = function (event) {
+
+        };
+        socket.onclose = function (event) {
+
+        };
+    } else {
+        alert("Your browser does not support Websockets. (Use Chrome)");
+    }
+
+
+}
+
+function uploadHex() {
+//    var charm = $("#consoleCompiling").data("charm");
+//    charm.open();
+//    $("#compileResultTextArea").empty();
+//    var makeUI = $.get("http://" + targetServer + ":8080/project/upload/" + project.id, function (data) {
+////            alert(data);    
+//        $("#compileResultTextArea").append(data);
+//        $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 1000);
+////            var textarea = document.getElementById('compileResultTextArea');
+////            textarea.scrollTop = textarea.scrollHeight;
+//    }).done(function () {
+////        //alert("second success ");
+//    }).fail(function (data) {
+//        //alert("error " + data);
+//    }).always(function () {
+////        alert("allwaysS");
+//    });
+
+
+//    var charm = $("#consoleCompiling").data("charm");
+//    charm.open();
+//    $("#compileResultTextArea").empty();
+//    $.ajax({
+//        url: "http://" + targetServer + ":8080/project/upload/" + project.id,
+//        data: {
+//            format: 'json'
+//        },
+//        error: function () {
+//            alert("some eroorr");
+//        },
+//        dataType: 'jsonp',
+//        success: function (data) {
+//        $("#compileResultTextArea").append(data);
+//        $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 1000);
+//        },
+//        type: 'GET'
+//    });
+
+
+    var charm = $("#consoleCompiling").data("charm");
+    charm.open();
+    $("#compileResultTextArea").empty();
+
+
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://" + targetServer + ":8080/project/upload/" + project.id);
+        socket.onmessage = function (event) {
+            $("#compileResultTextArea").append(event.data);
+            $("#compileResultTextArea").animate({scrollTop: $('#compileResultTextArea').prop("scrollHeight")}, 0);
+        }
+        socket.onopen = function (event) {
+
+        };
+        socket.onclose = function (event) {
+
+        };
+    } else {
+        alert("Your browser does not support Websockets. (Use Chrome)");
+    }
+}
+
+
+function saveSerialPort() {
+    var selectedSerialPort = $("#listSerialPort").val();
+    alert(selectedSerialPort);
+    $("#portSerial_labelName").text(selectedSerialPort.replace(/%2f/g, "/"));
+    var dialog = $("#portSerial_dialog").data('dialog');
+    dialog.close();
+    alert(project.id);
+
+    var makeUI = $.get("http://" + targetServer + ":8080/project/updateSerialPort/" + project.id + "/" + selectedSerialPort, function (data) {
+
+
+        alert(data.result);
+//        window.setTimeout(function () {
+//            var dialog = $("#portSerial_dialog").data('dialog');
+//            dialog.open();
+//            $("#fetchingProject").data('dialog').close();
+//        }, 500);
+
+
+    }).done(function () {
+//        alert("done");
+    }).fail(function (data) {
+//        alert("failed");
+    }).always(function () {
+//        alert("allways");
+    });
+}
+
+function consoleButton() {
+    alert("console click");
+    var charm = $("#serialMonitor").data("charm");
+    charm.open();
+
+
+
+
+
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://" + targetServer + ":8080/project/monitor/" + project.id);
+        socket.onmessage = function (event) {
+            $("#serialResultTextArea").append(event.data);
+            $("#serialResultTextArea").animate({scrollTop: $('#serialResultTextArea').prop("scrollHeight")}, 0);
+        }
+        socket.onopen = function (event) {
+            $("#sendSerialButton").click(function () {
+                var valueSerial = $("#sendSerialTextField").val();
+                socket.send(valueSerial);
+//                alert("serial button di click akhrinya "+valueSerial);
+            });
+        };
+        socket.onclose = function (event) {
+
+        };
+
+
+
+
+    } else {
+        alert("Your browser does not support Websockets. (Use Chrome)");
+    }
+
+
+
+
+
 }

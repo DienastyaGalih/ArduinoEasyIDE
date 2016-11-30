@@ -1,8 +1,0 @@
-INSERT INTO `project`(`pk_id_project`, `USER_2_user_name`, `name`, `detail`, `accessbility`, `cretate_date`, `modify_date`, `board_type`, `ic_type`, `soft_delete`) VALUES ('galih1994','galih1994_754564eb26b24c319164d76df3d1b085','kj','kjh','Private','2016-11-02 09:00:30','2016-11-02 09:00:30','Arduino Uno','Atmega 32p 5v','f')
-
-
-
-INSERT INTO `project`(`pk_id_project`, `USER_2_user_name`, `name`, `detail`, `accessbility
-`, `cretate_date`, `modify_date`, `board_type`, `ic_type`, `soft_delete`) VALUES ('galih19
-94','galih1994_754564eb26b24c319164d76df3d1b085','kj','kjh','Private','2016-11-02 09:00:30
-','2016-11-02 09:00:30','Arduino Uno','Atmega 32p 5v','f')

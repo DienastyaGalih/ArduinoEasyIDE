@@ -25,7 +25,6 @@
         <script src="js/prettify/run_prettify.js"></script>
         <script src="js/ga.js"></script>
         <script src="consoleLoader2.js"></script>
-
     </head>
     <body class="bg-grayLighter" >
 
@@ -139,39 +138,33 @@
                                 <span class="icon mif-checkmark" ></span>
                                 <span class="label">Verify</span>
                             </button>
-                            <button class="fluent-big-button " style="width: 70px">
+                            <button id="cleanButton" class="fluent-big-button " style="width: 70px">
+                                <span class="icon mif-magic-wand" ></span>
+                                <span class="label">Clean</span>
+                            </button>
+                            <button id="uploadButton" class="fluent-big-button " style="width: 70px">
                                 <span class="icon mif-arrow-right"></span>
                                 <span class="label">Upload</span>
+                            </button>
+                            <button id="consoleButton" class="fluent-big-button " style="width: 70px">
+                                <span><img style="" src="images/debug-console.png"></span>
+                                <span class="label">Serial</span>
                             </button>
                         </div>
                         <div class="tab-group-caption " style="padding: 2px" >Run</div>
                     </div>
-                    <div class="tab-panel-group">
+                    <div class="tab-panel-group" >
                         <div class="tab-content-segment" >
-                            <button class="fluent-big-button dropdown-toggle" >
-                                <span  class="on-left"><img  src="images/arduinoNewedda.png"></span>
-                                <span class="label" id="arduinoType">Arduino Board</span>
+                            <button id="configBoardButton" class="fluent-big-button" style="width: 90px">
+                                <span><img style="width:  55px" src="images/arduinoIcon.png"></span>
+                                <span class="label" id="arduinoBoardType_name">Null</span>
                             </button>
-                            <ul class="d-menu" data-role="dropdown"  >
-                                <li><a href="#">Arduino nano</a></li>
-                                <li><a href="#">Mega Duino</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Pro mini 3.2V</a></li>
-                                <li><a href="#">Arduino Uno</a></li>
-                            </ul>
                         </div>
-                        <div class="tab-content-segment">
-                            <button class="fluent-big-button dropdown-toggle" >
-                                <span class=" on-left"><img src="images/icIcon2.png"></span>
-                                <span class="label" id="arduinoIC">Arduino Board</span>
+                        <div class="tab-content-segment" >
+                            <button id="portSerial_menuButton" class="fluent-big-button" style="width: 90px">
+                                <span><img style="width:  55px"  src="images/portDB9.png"></span>
+                                <span id="portSerial_labelName" class="label" >Null</span>
                             </button>
-                            <ul class="d-menu" data-role="dropdown">
-                                <li><a href="#">ATmega 32PU</a></li>
-                                <li><a href="#">Mega Duino</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Pro mini 3.2V</a></li>
-                                <li><a href="#">Arduino Uno</a></li>
-                            </ul>
                         </div>
                         <div class="tab-group-caption"  style="padding: 2px" >Config</div>
                     </div>
@@ -316,6 +309,10 @@
         </div>
         <div  data-role="dialog" id="dialog9" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px">
             <h3 align="center" class="text-light">Fetching code</h3>
+            <div style="width: 400px;color:  transparent" data-role="preloader" data-type="metro" data-style="color"></div>
+        </div>
+        <div  data-role="dialog" id="fetchingProject" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px; ">
+            <h3 align="center" class="text-light">Fetching project</h3>
             <div style="width: 400px;color:  transparent" data-role="preloader" data-type="metro" data-style="color"></div>
         </div>
         <div  data-role="dialog" id="createProject_waiting" class="padding20 active" data-close-button="false" data-overlay="true" data-overlay-color="op-dark" data-overlay-click-close="false" style="padding-top: 5px">
@@ -464,7 +461,11 @@
             </table>
 
             <div  class="input-control  textarea"  data-text-max-height="300" style="width: 100%; " >
-                <textarea id="compileResultTextArea" readonly  style="font-family: Courier New"  rows="30" class="bg-grayLighter" ></textarea>
+                <div class="progress ani" data-value="55" data-color="ribbed-blue" data-role="progress" style="padding-top: 0;margin-top: 0"></div>                
+                <div id="compileResultTextArea"   style="font-family: Courier New;height: 500px;overflow: auto"   class="bg-grayLighter fg-dark" >
+                    <div class="fg-dark">result bener</div>
+                    <div class="fg-green">result bener</div>
+                </div>
             </div>
         </div>
 
@@ -485,8 +486,159 @@
 //            dialog.open();
 
         </script>
+
+
+        <div  class="bg-grayLighter bordered border " data-role="dialog" id="arduinoBoardType"  >
+            <div style="padding-bottom: 10px; padding-top: 30px; padding-left: 30px;padding-right: 30px; border-style: solid;border-color: #999999;border-width: 1px">
+                <table border="0">
+                    <tr >
+                        <td width="87px">
+                            <label>Board </label>
+                        </td>
+                        <td>
+                            <div  class="input-control select" style="margin: 0;padding: 0">
+                                <select id="arduinoBoardType_selectedBoard">
+                                    <option value="uno">Arduino Uno</option>
+                                    <option class="bg-grayLighter" value="nano">Arduino Nano</option>
+                                    <option class="bg-grayLighter" value="promini">Arduino Pro Mini</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td  style="padding-top:  10px">
+                            <label>Processor </label>
+                        </td>
+                        <td style="padding-top:  10px">
+                            <div  class="input-control select" style="margin: 0;padding: 0">
+                                <select id="arduinoBoardType_selectedProcessor">
+                                    <option class="bg-grayLighter" value="328">AtMega 328p 5v</option>
+                                    <option class="bg-grayLighter" value="328">AtMega 328p 3.3v</option>
+                                    <option class="bg-grayLighter" value="328">AtMega 328U </option>
+                                    <option value="default">Default</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>
+
+                        </td>
+                        <td align="right"  style="padding-top:  10px">
+                            <button id="arduinoBoardType_buttonCancel" class=" small-button" style="border: 0">Cancel</button>
+                            <button id="arduinoBoardType_buttonSave" class="small-button fg-white " style="background-color: #4679e4; border: 0">Save</button>
+                        </td>
+                    </tr>
+                </table>
+
+                <br>
+            </div>
+        </div>
+
+
+        <div  class="bg-grayLighter bordered border " data-role="dialog" id="portSerial_dialog"  style="margin: 0;padding: 0">
+            <div style="padding-bottom: 10px;  padding-top: 20px; padding-left: 20px;padding-right: 20px; border-style: solid;border-color: #999999;border-width: 1px">
+                <table border="0">
+                    <tr >
+                        <td width="80px">
+                            <label>Serial Port </label>
+                        </td>
+                        <td >
+                            <div  class="input-control select" style="margin: 0;padding: 0">
+                                <select id="listSerialPort" class="text-light">
+                                    <option class="text-light" value="uno">/dev/usbtty0</option>
+                                    <option class="text-light" value="uno">/dev/usbtty1</option>
+                                    <option class="text-light" value="uno">/dev/usbtty2</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>
+
+                        </td>
+                        <td align="right"  style="padding-top:  10px">
+                            <button id="portSerial_buttonCancel" class=" small-button" style="border: 0">Cancel</button>
+                            <button id="portSerial_buttonSave" class="small-button fg-white " style="background-color: #4679e4; border: 0">Save</button>
+                        </td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+
+
+        <div id="serialMonitor"  class="shadow" data-role="charm" data-position="right" style="width: 400px; background: #6d6d6d">
+            <table border="0" width="100%">
+                <tr>
+                    <td>
+                        <h3 class="text-light fg-white" >Serial Monitor</h3>            
+                    </td>
+                    <td align="right">
+                        <span class="mif-arrow-right mif-1k2x fg-hover-blue" id="compileResultCloseButton"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <div  class="input-control  textarea"  data-text-max-height="300" style="width: 100%; " >
+
+
+                <table border="0" width="100%">
+                    <tr valign="top">
+                        <td style="padding: 0;margin: 0">
+                            <div class="input-control text smaller" style="width: 300px; padding: 0; margin: 0">
+                                <input  id="sendSerialTextField" style="font-family: Courier New;font-size: 13px;margin: 0;padding-left: 5px;height: 30px" type="text" placeholder="Will send to arduino">
+                            </div>
+                        </td>
+                        <td align="right"  >
+                            <!--<input type="button" value="Button">-->
+                            <button class="button button" id="sendSerialButton" style="font-size: 13px;margin: 0;height: 30px">Send</button>
+                            <!--<span class="mif-arrow-right mif-1k2x fg-hover-blue" id="compileResultCloseButton"></span>-->
+                        </td>
+                    </tr>
+                </table>
+                <div id="serialResultTextArea"   style="font-family: Courier New;height: 495px;overflow: auto"   class="bg-grayLighter fg-dark" >
+<!--                    <div class="fg-dark">result bener</div>
+                    <div class="fg-green">result bener</div>-->
+                </div>
+
+
+                
+                <table border="0" width="100%"  style="margin-top: 8px">
+                    
+                    <tr valign="bottom">
+
+                        <td >
+                            <label class="input-control checkbox small-check" style="padding:0;margin: 0">
+                                <input type="checkbox" checked>
+                                <span class="check"></span>
+                                <span class="caption">Autoscroll</span>
+                            </label>                                
+                        </td>
+                        <td   style="margin: 0;padding: 0" align="right">
+                            <div class="input-control select" style="width: 120px ; font-size: 13;height: 30px;padding:0;margin: 0; margin-left: 7px">
+                                <select style="width: 120px; font-size: 13; height: 30px">
+                                    <option>No line ending</option>
+                                    <option>Newline</option>
+                                </select>
+                            </div> 
+                        </td>
+                        <td  style="margin: 0;padding: 0" align="right">
+                            <div class="input-control select " style="width: 70px ; font-size: 13;height: 30px;padding:0;margin: 0px; margin-left: 7px">
+                                <select style="width: 70px; font-size: 10; height: 30px">
+                                    <option>9600</option>
+                                    <option>57600</option>
+                                    <option>115200</option>
+                                </select>
+                            </div>    
+                        </td>
+                        <td   valign="top">
+                            <button  style="font-size: 13px;height: 30px; margin-top: 1px; margin-left: 7px" class="button">Clear</button>
+                        </td>                        
+                    </tr>
+                </table>
+            </div>
+        </div>
     </body>
-
 </html>
-
-

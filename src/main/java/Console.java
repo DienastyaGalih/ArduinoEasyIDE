@@ -5,6 +5,7 @@
  */
 
 import Data.Project;
+import com.fazecast.jSerialComm.SerialPort;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
@@ -27,8 +28,17 @@ public class Console extends AbstractVerticle {
 
     String username = "galih1994";
 
+    
     @Override
     public void start(Future<Void> fut) {
+                
+        System.out.println("Starting serial port");
+       
+        System.out.println("End");
+        vertx.deployVerticle(new ConsoleRaspberry());
+    }
+//    @Override
+    public void stasrt(Future<Void> fut) {
 
         ShellInteraction.getInstance().init(vertx);
 
@@ -83,7 +93,8 @@ public class Console extends AbstractVerticle {
         String projectId = routingContext.request().getParam("projectId");
         HttpServerResponse response = routingContext.response();
 //        response.putHeader("content-type", "application/json");
-//        response.setChunked(true);
+        response.putHeader("content-type", "text/plain");
+        response.setChunked(true);
         
         ShellInteraction.getInstance().compile(projectId,response);
 //        response.end("finish");
